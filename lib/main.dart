@@ -1,63 +1,40 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:evently_app/core/routing/app_router.dart';
+import 'package:evently_app/features/onboarding/viewmodel/language/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'core/helper/shared_check_helper.dart';
+import 'features/my_app.dart';
+import 'features/onboarding/viewmodel/theme/theme_provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  await SharedCheckHelper.init();
+  final bool themeDark = await SharedCheckHelper.getValue(
+    ThemeProvider.themeKey)??true;
+  final bool languageEnglish = await SharedCheckHelper.getValue(
+    LanguageProvider.languageKey,)??true;
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Locale startedLocale = languageEnglish
+      ? const Locale('en')
+      : const Locale('ar');
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      startLocale: startedLocale,
+      fallbackLocale: const Locale('en'),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider(themeDark)),
+          ChangeNotifierProvider(
+            create: (_) => LanguageProvider(languageEnglish),
+          ),
+        ],
+        child: MyApp(appRouter: AppRouter()),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+    ),
+  );
 }
