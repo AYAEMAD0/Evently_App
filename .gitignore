@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+.packages
+.env
+
+# Android
+android/app/google-services.json
+
+# iOS
+ios/Runner/GoogleService-Info.plist
+
+# Firebase Hosting (اختياري)
+firebase.json
