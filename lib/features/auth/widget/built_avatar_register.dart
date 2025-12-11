@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../core/constants/app_asset.dart';
 
 class BuiltAvatarRegister extends StatefulWidget {
@@ -57,7 +56,7 @@ class _BuiltAvatarRegisterState extends State<BuiltAvatarRegister> {
               });
               carouselController!.animateToPage(currentIndex);
               if (widget.onAvatarChanged != null) {
-                widget.onAvatarChanged!(currentIndex+1);
+                widget.onAvatarChanged!(currentIndex);
               }
             },
             child: Image.asset(e,fit: BoxFit.cover,));

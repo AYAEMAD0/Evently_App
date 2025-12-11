@@ -1,167 +1,94 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently_app/core/config/di.dart';
+import 'package:evently_app/features/auth/viewmodel/auth_state.dart';
+import 'package:evently_app/features/auth/viewmodel/signup/signup_cubit.dart';
+import 'package:evently_app/features/auth/widget/built_signup_bottom.dart';
+import 'package:evently_app/features/auth/widget/built_signup_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/helper/validator_helper.dart';
 import '../../../core/routing/routes.dart';
-import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_style.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_text_field.dart';
-import '../../../core/widgets/custom_toggle_language.dart';
-import '../widget/already_and_donot_have_account.dart';
+import '../../../core/widgets/custom_dialog.dart';
 import '../widget/built_avatar_register.dart';
 
-
 class SignupView extends StatelessWidget {
-   SignupView({super.key});
+  const SignupView({super.key});
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController rePasswordController = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  int selectedAvatarId=0;
   @override
   Widget build(BuildContext context) {
+    SignupCubit viewmodel = getIt<SignupCubit>();
     return Scaffold(
       appBar: AppBar(
         title: Text("register".tr(), style: AppStyle.medium20Primary),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:12.w,vertical: 15.h),
-            child: Form(
-              key: formKey,
-              child: Column(
-                spacing: 20.h,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  BuiltAvatarRegister(
-                    onAvatarChanged: (index) {
-                      selectedAvatarId = index;
-                    },),
-                  CustomTextField(
-                    textStyle: Theme.of(context).textTheme.labelLarge!,
-                    hint: "name".tr(),
-                    controller: nameController,
-                    validator: (text) => ValidatorHelper.validateName(text),
-                    hintStyle: Theme.of(context).textTheme.labelLarge!,
-                    borderColor: Theme.of(context).colorScheme.outline,
-                    fillColor: AppColor.transparentColor,
-                    prefixIcon: Icon(Icons.person),
-                    prefixIconColor: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant,
-                  ),
-                  CustomTextField(
-                    textStyle: Theme.of(context).textTheme.labelLarge!,
-                    keyboard: TextInputType.emailAddress,
-                    hint: "email".tr(),
-                    controller: emailController,
-                    validator: (text) => ValidatorHelper.validateEmail(text),
-                    hintStyle: Theme.of(context).textTheme.labelLarge!,
-                    borderColor: Theme.of(context).colorScheme.outline,
-                    fillColor: AppColor.transparentColor,
-                    prefixIcon: Icon(Icons.email),
-                    prefixIconColor: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant,
-                  ),
-                  Column(
+      body: BlocConsumer<SignupCubit, AuthState>(
+        bloc: viewmodel,
+        listener: (context, state) {
+          // TODO: implement listener
+          if (state is AuthError) {
+            CustomDialog.hideLoading(context: context);
+            CustomDialog.showMessage(
+              context: context,
+              title: 'error'.tr(),
+              message: state.messageError,
+              posActionName: 'ok'.tr(),
+            );
+          } else if (state is AuthLoading) {
+            return CustomDialog.showLoading(context: context);
+          } else if (state is AuthSuccess) {
+            CustomDialog.hideLoading(context: context);
+            CustomDialog.showMessage(
+              context: context,
+              message:
+                  '${'verification_email_sent'.tr()} ${viewmodel.emailController.text} ${"check_inbox".tr()}',
+              title: 'successfully'.tr(),
+              posActionName: 'ok'.tr(),
+              posActionClick: () {
+                Navigator.pushReplacementNamed(context, Routes.loginRouteName);
+              },
+            );
+          } else if (state is AuthSuccess) {
+            return CustomDialog.showMessage(
+              context: context,
+              message: 'login_successfully'.tr(),
+              title: 'successfully'.tr(),
+              posActionName: 'ok'.tr(),
+              posActionClick: () {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.dashBoardRouteName,
+                );
+              },
+            );
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+                child: Form(
+                  key: viewmodel.formKey,
+                  child: Column(
                     spacing: 20.h,
-                        children: [
-                          CustomTextField(
-                            textStyle: Theme.of(context).textTheme.labelLarge!,
-                            keyboard: TextInputType.visiblePassword,
-                            hint: "password".tr(),
-                            controller: passwordController,
-                            validator: (text) =>
-                                ValidatorHelper.validatePassword(text),
-                            hintStyle: Theme.of(context).textTheme.labelLarge!,
-                            borderColor: Theme.of(context).colorScheme.outline,
-                            fillColor: AppColor.transparentColor,
-                            prefixIcon: Icon(Icons.lock),
-                            prefixIconColor: Theme.of(
-                              context,
-                            ).colorScheme.outlineVariant,
-                            obscure:true,
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                //todo show password
-
-                              },
-                              icon: Icon(
-                                true
-                                    ? Icons.visibility_off_sharp
-                                    : Icons.visibility,
-                              ),
-                            ),
-                            suffixIconColor: Theme.of(
-                              context,
-                            ).colorScheme.outlineVariant,
-                          ),
-                          CustomTextField(
-                            textStyle: Theme.of(context).textTheme.labelLarge!,
-                            keyboard: TextInputType.visiblePassword,
-                            hint: "re_password".tr(),
-                            controller: rePasswordController,
-                            validator: (text) =>
-                                ValidatorHelper.validateConfirmPassword(
-                                  text,
-                                  passwordController.text,/////todo
-                                ),
-                            hintStyle: Theme.of(context).textTheme.labelLarge!,
-                            borderColor: Theme.of(context).colorScheme.outline,
-                            fillColor: AppColor.transparentColor,
-                            prefixIcon: Icon(Icons.lock),
-                            prefixIconColor: Theme.of(
-                              context,
-                            ).colorScheme.outlineVariant,
-                            obscure: true,
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                //todo show RePassword
-                              },
-                              icon: Icon(
-                               false
-                                    ? Icons.visibility_off_sharp
-                                    : Icons.visibility,
-                              ),
-                            ),
-                            suffixIconColor: Theme.of(
-                              context,
-                            ).colorScheme.outlineVariant,
-                          ),
-                        ],
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      BuiltAvatarRegister(
+                        onAvatarChanged: (index) {
+                          viewmodel.changeIndex(index);
+                        },
                       ),
-                  SizedBox(height: 10.h),
-                  CustomButton(
-                    onPressed: () async {
-                      //todo logic signup
-                    },
-                    backgroundColor: AppColor.primaryColor,
-                    text: 'create_account'.tr(),
-                    styleText: AppStyle.medium20White,
+                      BuiltSignupForm(viewmodel: viewmodel),
+                      BuiltSignupBottom(viewmodel: viewmodel),
+                    ],
                   ),
-                  AlreadyAndDonotHaveAccount(
-                    text: 'already_have_account'.tr(),
-                    textButton: "login".tr(),
-                    onPressed: () {
-                      //todo nav into login
-                      Navigator.pushNamed(context, Routes.loginRouteName);
-                    },
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: CustomToggleLanguage(),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

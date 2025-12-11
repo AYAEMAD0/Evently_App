@@ -3,7 +3,10 @@ import 'package:evently_app/core/routing/app_router.dart';
 import 'package:evently_app/features/onboarding/viewmodel/language/language_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'core/config/di.dart';
+import 'core/config/my_bloc_observer.dart';
 import 'core/helper/shared_check_helper.dart';
 import 'features/my_app.dart';
 import 'features/onboarding/viewmodel/theme/theme_provider.dart';
@@ -14,6 +17,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: FirebaseOptionsHelper.options);
+  configureDependencies();
+  Bloc.observer = MyBlocObserver();
   await EasyLocalization.ensureInitialized();
   await SharedCheckHelper.init();
   final bool themeDark = await SharedCheckHelper.getValue(

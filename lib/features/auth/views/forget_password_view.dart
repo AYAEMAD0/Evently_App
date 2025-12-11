@@ -1,68 +1,74 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently_app/core/config/di.dart';
+import 'package:evently_app/core/routing/routes.dart';
+import 'package:evently_app/features/auth/viewmodel/auth_state.dart';
+import 'package:evently_app/features/auth/widget/built_forget_password.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/app_asset.dart';
-import '../../../core/helper/validator_helper.dart';
-import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_style.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/custom_dialog.dart';
+import '../viewmodel/forget_password/forget_password_cubit.dart';
 
 class ForgetPasswordView extends StatelessWidget {
-   ForgetPasswordView({super.key});
+  const ForgetPasswordView({super.key});
 
-  TextEditingController emailController = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    ForgetPasswordCubit viewmodel = getIt<ForgetPasswordCubit>();
     return Scaffold(
       appBar: AppBar(
         title: Text("forget_password".tr(), style: AppStyle.medium20Primary),
         centerTitle: true,
       ),
-      body: SafeArea(
+      body: BlocListener<ForgetPasswordCubit, AuthState>(
+        bloc: viewmodel,
+        listener: (context, state) {
+          // TODO: implement listener
+          if (state is AuthError) {
+            CustomDialog.hideLoading(context: context);
+            CustomDialog.showMessage(
+              context: context,
+              title: 'error'.tr(),
+              message: state.messageError,
+              posActionName: 'ok'.tr(),
+            );
+          } else if (state is AuthLoading) {
+            return CustomDialog.showLoading(context: context);
+          } else if (state is AuthSuccess) {
+            CustomDialog.hideLoading(context: context);
+            CustomDialog.showMessage(
+              context: context,
+              title: 'successfully'.tr(),
+              message: 'password_reset_sent'.tr(),
+              posActionName: 'ok'.tr(),
+              posActionClick: () {
+                Navigator.pushReplacementNamed(context, Routes.loginRouteName);
+              },
+            );
+          }
+        },
+        child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:12.w,vertical: 15.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
             child: Form(
-              key: formKey,
+              key: viewmodel.formKey,
               child: SingleChildScrollView(
                 child: Column(
                   spacing: 20.h,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Image.asset(
-                      AppAsset.forgetPasswordImage,
-                      height: 320.h,
-                    ),
+                    Image.asset(AppAsset.forgetPasswordImage, height: 320.h),
                     SizedBox(height: 8.h),
-                    CustomTextField(
-                      textStyle: Theme.of(context).textTheme.labelLarge!,
-                      keyboard: TextInputType.emailAddress,
-                      hint: "email".tr(),
-                      controller: emailController,
-                      validator: (text) => ValidatorHelper.validateEmail(text),
-                      hintStyle: Theme.of(context).textTheme.labelLarge!,
-                      borderColor: Theme.of(context).colorScheme.outline,
-                      fillColor: AppColor.transparentColor,
-                      prefixIcon: Icon(Icons.email),
-                      prefixIconColor: Theme.of(
-                        context,
-                      ).colorScheme.outlineVariant,
-                    ),
-                    CustomButton(
-                      onPressed: () {
-                        //todo logic reset password
-                      },
-                      backgroundColor: AppColor.primaryColor,
-                      text: 'reset_password'.tr(),
-                      styleText: AppStyle.medium20White,
-                    ),
+                    BuiltForgetPassword(viewmodel: viewmodel),
                   ],
                 ),
               ),
             ),
           ),
         ),
+      ),
     );
   }
 }
