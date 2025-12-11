@@ -1,14 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently_app/core/routing/app_router.dart';
 import 'package:evently_app/features/onboarding/viewmodel/language/language_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/helper/shared_check_helper.dart';
 import 'features/my_app.dart';
 import 'features/onboarding/viewmodel/theme/theme_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'firebase_options_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(options: FirebaseOptionsHelper.options);
   await EasyLocalization.ensureInitialized();
   await SharedCheckHelper.init();
   final bool themeDark = await SharedCheckHelper.getValue(
