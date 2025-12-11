@@ -9,10 +9,10 @@ class SignupCubit extends Cubit<AuthState> {
   SignupUseCase signupUseCase;
   SignupCubit({required this.signupUseCase}) : super(AuthInitial());
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController rePasswordController = TextEditingController();
+  TextEditingController nameController = TextEditingController(text: "aya");
+  TextEditingController emailController = TextEditingController(text: "ayaemed8881@gmail.com");
+  TextEditingController passwordController = TextEditingController(text: "123456");
+  TextEditingController rePasswordController = TextEditingController(text: "123456");
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int selectedAvatarId = 1;
   bool showPassword=false;
