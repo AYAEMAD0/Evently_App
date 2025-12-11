@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_asset.dart';
+import '../../../core/routing/routes.dart';
 import '../../../core/theme/app_color.dart';
 import '../model/onboarding_model.dart';
 import '../viewmodel/language/language_provider.dart';
@@ -64,6 +65,7 @@ class OnboardingOtherView extends StatelessWidget {
           ),
           onDone: () async{
             //todo auth
+            Navigator.pushReplacementNamed(context, Routes.loginRouteName);
           },
           showDoneButton: true,
           dotsDecorator: DotsDecorator(

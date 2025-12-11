@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../theme/app_color.dart';
+import '../theme/app_style.dart';
+
+class CustomTextField extends StatelessWidget {
+  final TextStyle textStyle;
+  final String hint;
+  final TextStyle hintStyle;
+  final String? label;
+  final TextStyle? labelStyle;
+
+  final Widget? prefixIcon;
+  final Color? prefixIconColor;
+  final Widget? suffixIcon;
+  final Color? suffixIconColor;
+  final Color fillColor;
+
+  final Color borderColor;
+  final int maxLines;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboard;
+  final bool? obscure;
+  final String? obscureCharacter;
+  final void Function(String)? onChanged;
+  const CustomTextField({
+    super.key,
+    required this.textStyle,
+    required this.hint,
+    required this.hintStyle,
+    required this.controller,
+    required this.borderColor,
+    required this.fillColor,
+    this.validator,
+    this.maxLines = 1,
+    this.keyboard,
+    this.label,
+    this.labelStyle,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.suffixIconColor,
+    this.prefixIconColor,
+    this.obscure = false,
+    this.obscureCharacter,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      style: textStyle,
+      controller: controller,
+      validator: validator,
+      onChanged: onChanged,
+      autofocus: false,
+      obscureText: obscure!,
+      obscuringCharacter: obscureCharacter ?? "*",
+      maxLines: maxLines,
+      cursorColor: AppColor.primaryColor,
+      cursorHeight: 23.h,
+      cursorWidth: 3.w,
+      keyboardType: keyboard ?? TextInputType.text,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: hintStyle,
+        labelText: label,
+        labelStyle: labelStyle,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 12.w,
+          vertical: 20.h,
+        ),
+        enabledBorder: builtBorder(borderColor),
+        focusedBorder: builtBorder(borderColor),
+        errorBorder: builtBorder(),
+        focusedErrorBorder: builtBorder(),
+        prefixIcon: prefixIcon,
+        prefixIconColor: prefixIconColor,
+        suffixIcon: suffixIcon,
+        suffixIconColor: suffixIconColor,
+        errorStyle: AppStyle.regular16Red,
+        filled: true,
+        fillColor: fillColor,
+      ),
+    );
+  }
+
+  OutlineInputBorder builtBorder([Color colorBorder = AppColor.redColor]) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16.r),
+      borderSide: BorderSide(color: colorBorder, width: 1.3.w),
+    );
+  }
+}
