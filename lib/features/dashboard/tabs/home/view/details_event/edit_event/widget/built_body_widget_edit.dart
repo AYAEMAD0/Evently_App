@@ -43,13 +43,12 @@ class BuiltBodyWidgetEdit extends StatelessWidget {
             style: AppStyle.bold16Primary,
           ),
         ),
-        SizedBox(height: 8.h),
         CustomButton(
           onPressed: () {
             cubit.editEvent(context);
           },
           backgroundColor: AppColor.primaryColor,
-          paddingHeight: 16.h,
+          paddingHeight: 20.h,
           text: "update_event".tr() ,
           styleText: Theme.of(context).textTheme.displayMedium!,
         )
