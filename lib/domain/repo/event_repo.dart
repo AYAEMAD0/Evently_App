@@ -5,5 +5,6 @@ abstract class EventRepo{
   Future<List<EventEntity>> getEventsByCategory({required String eventCategory});
   Future<List<EventEntity>> getAllEvents();
   Future<void> deleteEvent({required EventEntity event});
+  Future<void> editEvent({required EventEntity event});
 
 }
