@@ -61,7 +61,7 @@ class AddEventCubit extends Cubit<AddEventState> {
   Future<void> addEvent() async {
     if (!formKey.currentState!.validate()) return;
     if (selectedDate == null || selectedTime == null) {
-      emit(AddEventError("date_time_required"));
+      emit(AddEventError("Date time required"));
       return;
     }
     if (imageLightEvent == null || imageDarkEvent == null || categoryName == null) {
