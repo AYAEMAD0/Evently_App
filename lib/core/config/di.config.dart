@@ -22,6 +22,7 @@ import '../../data/repo_impl/event_repo_impl.dart' as _i212;
 import '../../domain/repo/auth_repo.dart' as _i716;
 import '../../domain/repo/event_repo.dart' as _i374;
 import '../../domain/usecases/add_event_usecase.dart' as _i397;
+import '../../domain/usecases/delete_event_usecase.dart' as _i117;
 import '../../domain/usecases/forget_password_usecase.dart' as _i25;
 import '../../domain/usecases/get_all_events_usecase.dart' as _i139;
 import '../../domain/usecases/get_event_by_category_usecase.dart' as _i85;
@@ -34,6 +35,8 @@ import '../../features/auth/viewmodel/login/login_cubit.dart' as _i131;
 import '../../features/auth/viewmodel/signup/signup_cubit.dart' as _i776;
 import '../../features/dashboard/tabs/add_event/viewmodel/add_event_cubit.dart'
     as _i602;
+import '../../features/dashboard/tabs/home/view/details_event/viewmodel/delete_event_cubit.dart'
+    as _i166;
 import '../../features/dashboard/tabs/home/viewmodel/get_event_cubit.dart'
     as _i190;
 
@@ -55,6 +58,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i397.AddEventUseCase>(
       () => _i397.AddEventUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
+    gh.factory<_i117.DeleteEventUseCase>(
+      () => _i117.DeleteEventUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
     gh.factory<_i139.GetAllEventsUseCase>(
       () => _i139.GetAllEventsUseCase(eventRepo: gh<_i374.EventRepo>()),
@@ -80,6 +86,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i716.AuthRepo>(
       () => _i540.AuthRepoImpl(
         authRemoteDataSource: gh<_i865.AuthRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i166.DeleteEventCubit>(
+      () => _i166.DeleteEventCubit(
+        deleteEventUseCase: gh<_i117.DeleteEventUseCase>(),
       ),
     );
     gh.factory<_i25.ForgetPasswordUseCase>(
