@@ -222,10 +222,12 @@ class _HomeTabState extends State<HomeTab> {
                   );
                 }
               } else if (state is GetEventError) {
-                return Center(
-                  child: Text(
-                    state.messageError,
-                    style: Theme.of(context).textTheme.labelMedium,
+                return Expanded(
+                  child: Center(
+                    child: Text(
+                      state.messageError,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
                   ),
                 );
               }

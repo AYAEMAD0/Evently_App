@@ -6,7 +6,10 @@ import 'package:evently_app/features/dashboard/dashboard_view.dart';
 import 'package:evently_app/features/dashboard/tabs/add_event/view/add_event_tab.dart';
 import 'package:evently_app/features/onboarding/views/onboarding_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/dashboard/tabs/home/viewmodel/get_event_cubit.dart';
 import '../../features/onboarding/views/onboarding_other_view.dart';
+import '../config/di.dart';
 
 class AppRouter {
   Route generateRoute(RouteSettings settings) {
@@ -22,7 +25,12 @@ class AppRouter {
       case Routes.forgetPasswordRouteName:
         return MaterialPageRoute(builder: (context) => ForgetPasswordView());
       case Routes.dashBoardRouteName:
-        return MaterialPageRoute(builder: (context) => DashboardView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<GetEventCubit>()..getAllEvents(),
+            child: const DashboardView(),
+          ),
+        );
       case Routes.addEventRouteName:
         return MaterialPageRoute(builder: (context) => AddEventTab());
       default:
