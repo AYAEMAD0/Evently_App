@@ -1,4 +1,4 @@
-import 'package:evently_app/domain/entities/user_model.dart';
+import 'package:evently_app/domain/entities/user_entity.dart';
 import 'package:injectable/injectable.dart';
 import '../repo/auth_repo.dart';
 
@@ -7,7 +7,7 @@ class LoginWithGoogleUseCase{
   AuthRepo authRepo;
   LoginWithGoogleUseCase({required this.authRepo});
 
-  Future<UserModel>call(){
+  Future<UserEntity>call(){
     return authRepo.loginWithGoogle();
   }
 }
