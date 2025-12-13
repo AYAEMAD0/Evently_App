@@ -55,5 +55,16 @@ class EventRepoImpl implements EventRepo {
     }
   }
 
+  @override
+  Future<void> editEvent({required EventEntity event}) async{
+    try{
+      //todo EventEntity-->EventModelDto
+      final dto = event.toEventModelDto();
+      await eventRemoteDataSource.editEvent(dto);
+    }catch(e){
+      throw Exception('Failed to edit event: ${e.toString()}');
+    }
+  }
+
 
 }

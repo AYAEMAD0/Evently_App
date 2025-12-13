@@ -69,11 +69,10 @@ class AddEventTab extends StatelessWidget {
                         ),
                       ),
 
-                      // Add Event Button
                       CustomButton(
-                        onPressed: state is AddEventLoading
-                            ? () {}
-                            : cubit.addEvent,
+                        onPressed: (){
+                          cubit.addEvent();
+                        },
                         backgroundColor: AppColor.primaryColor,
                         paddingHeight: 20.h,
                         text: "add_event".tr(),

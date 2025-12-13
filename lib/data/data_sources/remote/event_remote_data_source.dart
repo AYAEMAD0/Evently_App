@@ -58,4 +58,15 @@ class EventRemoteDataSource {
       throw Exception('Failed to delete event: ${e.toString()}');
     }
   }
+
+  Future<void> editEvent(EventModelDto dto) async {
+    if (dto.id == null || dto.id!.isEmpty) {
+      throw Exception('Event ID is null or empty. Cannot edit the event.');
+    }
+    try {
+      await getCollection().doc(dto.id).update(dto.toFirestore());
+    } catch (e) {
+      throw Exception('Failed to edit event: ${e.toString()}');
+    }
+  }
 }

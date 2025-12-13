@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../../../../../core/theme/app_style.dart';
 import '../../../../../../../domain/entities/event_entity.dart';
 import '../../../../../../onboarding/viewmodel/theme/theme_provider.dart';
-import '../widget/show_date_and_time.dart';
-import '../widget/show_map_details.dart';
+import 'show_date_and_time.dart';
+import 'show_map_details.dart';
 
 class BuiltBodyWidget extends StatelessWidget {
   const BuiltBodyWidget({super.key,required this.event});
