@@ -1,9 +1,9 @@
 import 'package:evently_app/data/model/event_model_dto.dart';
 import 'package:evently_app/domain/entities/event_entity.dart';
 
-extension EventEntityMapper on EventModelDto {
-  EventEntity toEventEntity() {
-    return EventEntity(
+extension EventEntityMapper on EventEntity {
+  EventModelDto toEventModelDto() {
+    return EventModelDto(
       lightImage: lightImage,
       darkImage: darkImage,
       category: category,

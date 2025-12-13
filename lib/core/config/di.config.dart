@@ -23,7 +23,8 @@ import '../../domain/repo/auth_repo.dart' as _i716;
 import '../../domain/repo/event_repo.dart' as _i374;
 import '../../domain/usecases/add_event_usecase.dart' as _i397;
 import '../../domain/usecases/forget_password_usecase.dart' as _i25;
-import '../../domain/usecases/get_event_usecase.dart' as _i1023;
+import '../../domain/usecases/get_all_events_usecase.dart' as _i139;
+import '../../domain/usecases/get_event_by_category_usecase.dart' as _i85;
 import '../../domain/usecases/login_usecase.dart' as _i253;
 import '../../domain/usecases/login_with_google_usecase.dart' as _i578;
 import '../../domain/usecases/signup_usecase.dart' as _i866;
@@ -33,6 +34,8 @@ import '../../features/auth/viewmodel/login/login_cubit.dart' as _i131;
 import '../../features/auth/viewmodel/signup/signup_cubit.dart' as _i776;
 import '../../features/dashboard/tabs/add_event/viewmodel/add_event_cubit.dart'
     as _i602;
+import '../../features/dashboard/tabs/home/viewmodel/get_event_cubit.dart'
+    as _i190;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -53,8 +56,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i397.AddEventUseCase>(
       () => _i397.AddEventUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
-    gh.factory<_i1023.GetEventUseCase>(
-      () => _i1023.GetEventUseCase(eventRepo: gh<_i374.EventRepo>()),
+    gh.factory<_i139.GetAllEventsUseCase>(
+      () => _i139.GetAllEventsUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
+    gh.factory<_i85.GetEventByCategoryUseCase>(
+      () => _i85.GetEventByCategoryUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
     gh.factory<_i865.AuthRemoteDataSource>(
       () => _i865.AuthRemoteDataSource(
@@ -64,6 +70,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i602.AddEventCubit>(
       () => _i602.AddEventCubit(gh<_i397.AddEventUseCase>()),
+    );
+    gh.factory<_i190.GetEventCubit>(
+      () => _i190.GetEventCubit(
+        getEventByCategoryUseCase: gh<_i85.GetEventByCategoryUseCase>(),
+        getAllEventsUseCase: gh<_i139.GetAllEventsUseCase>(),
+      ),
     );
     gh.factory<_i716.AuthRepo>(
       () => _i540.AuthRepoImpl(

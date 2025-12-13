@@ -25,7 +25,7 @@ class AddEventTab extends StatelessWidget {
               message: "event_added".tr(),
               context: context,
             );
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
 
           if (state is AddEventError) {
@@ -72,7 +72,7 @@ class AddEventTab extends StatelessWidget {
                       // Add Event Button
                       CustomButton(
                         onPressed: state is AddEventLoading
-                            ? () {} // Disable button during loading
+                            ? () {}
                             : cubit.addEvent,
                         backgroundColor: AppColor.primaryColor,
                         paddingHeight: 20.h,

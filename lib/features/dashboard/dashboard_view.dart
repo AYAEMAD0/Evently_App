@@ -1,10 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:evently_app/features/dashboard/tabs/home/model/event_category_model.dart';
 import 'package:evently_app/features/dashboard/tabs/profile/profile_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/routing/routes.dart';
 import 'tabs/fav/fav_tab.dart';
 import 'tabs/home/view/home_tab.dart';
+import 'tabs/home/viewmodel/get_event_cubit.dart';
 import 'tabs/map/map_tab.dart';
 
 class DashboardView extends StatefulWidget {
@@ -15,8 +18,6 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-
-
   int selectedIndex = 0;
 
   final List<IconData> iconSelected = [
@@ -54,10 +55,7 @@ class _DashboardViewState extends State<DashboardView> {
         },
         tabBuilder: (index, active) {
           return Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 3.w,
-            ),
+            padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 3.w),
             child: Column(
               children: [
                 Icon(
@@ -72,9 +70,17 @@ class _DashboardViewState extends State<DashboardView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async{
           //todo add event
-          Navigator.pushNamed(context, Routes.addEventRouteName);
+          final result = await Navigator.pushNamed(
+            context,
+            Routes.addEventRouteName,
+          );
+          if (!mounted) return;
+          if (result == true) {
+            context.read<GetEventCubit>().getAllEvents();
+            context.read<GetEventCubit>().changeIndex(0, EventCategoryModel.events[0].eventCategory);
+          }
         },
         shape: StadiumBorder(
           side: BorderSide(color: Theme.of(context).cardColor, width: 3.w),
