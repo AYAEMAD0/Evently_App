@@ -2,8 +2,9 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:evently_app/features/dashboard/tabs/profile/profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/routing/routes.dart';
 import 'tabs/fav/fav_tab.dart';
-import 'tabs/home/home_tab.dart';
+import 'tabs/home/view/home_tab.dart';
 import 'tabs/map/map_tab.dart';
 
 class DashboardView extends StatefulWidget {
@@ -73,6 +74,7 @@ class _DashboardViewState extends State<DashboardView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //todo add event
+          Navigator.pushNamed(context, Routes.addEventRouteName);
         },
         shape: StadiumBorder(
           side: BorderSide(color: Theme.of(context).cardColor, width: 3.w),

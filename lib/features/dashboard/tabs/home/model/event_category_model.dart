@@ -2,12 +2,12 @@ import 'package:icons_plus/icons_plus.dart';
 import '../../../../../core/constants/app_asset.dart';
 
 class EventCategoryModel {
-  final String eventName;
+  final String eventCategory;
   final FontAwesomeIconData icon;
   final String? imageLight;
   final String? imageDark;
   const EventCategoryModel({
-    required this.eventName,
+    required this.eventCategory,
     required this.icon,
     this.imageLight,
     this.imageDark,
@@ -15,59 +15,59 @@ class EventCategoryModel {
 
    static  List<EventCategoryModel> events =const  [
     EventCategoryModel(
-      eventName: "all",
+      eventCategory: "all",
       icon: FontAwesome.compass,
     ),
     EventCategoryModel(
-      eventName: "sport",
+      eventCategory: "sport",
       icon: FontAwesome.basketball_solid,
       imageLight: AppAsset.sportImage,
       imageDark: AppAsset.sportImageDark,
     ),
     EventCategoryModel(
-      eventName: "birthday",
+      eventCategory: "birthday",
       icon: FontAwesome.cake_candles_solid,
       imageLight: AppAsset.birthdayImage,
       imageDark: AppAsset.birthdayImageDark,
     ),
     EventCategoryModel(
-      eventName: "meeting",
+      eventCategory: "meeting",
       icon: FontAwesome.handshake,
       imageLight: AppAsset.meetingImage,
       imageDark: AppAsset.meetingImageDark,
     ),
     EventCategoryModel(
-      eventName: "gaming",
+      eventCategory: "gaming",
       icon: FontAwesome.gamepad_solid,
       imageLight: AppAsset.gamingImage,
       imageDark: AppAsset.gamingImageDark,
     ),
     EventCategoryModel(
-      eventName: "workshop",
+      eventCategory: "workshop",
       icon: FontAwesome.screwdriver_wrench_solid,
       imageLight: AppAsset.workShopImage,
       imageDark: AppAsset.workShopImageDark,
     ),
     EventCategoryModel(
-      eventName: "exhibition",
+      eventCategory: "exhibition",
       icon: FontAwesome.image,
       imageLight: AppAsset.exhibitionImage,
       imageDark: AppAsset.exhibitionImageDark,
     ),
     EventCategoryModel(
-      eventName: "book_club",
+      eventCategory: "book_club",
       icon: FontAwesome.book_atlas_solid,
       imageLight: AppAsset.bookClubImage,
       imageDark: AppAsset.bookClubImageDark,
     ),
     EventCategoryModel(
-      eventName: "eating",
+      eventCategory: "eating",
       icon: FontAwesome.utensils_solid,
       imageLight: AppAsset.eatingImage,
       imageDark: AppAsset.eatingImageDark,
     ),
     EventCategoryModel(
-      eventName: "holiday",
+      eventCategory: "holiday",
       icon: FontAwesome.umbrella_beach_solid,
       imageLight: AppAsset.holidayImage,
       imageDark: AppAsset.holidayImageDark,

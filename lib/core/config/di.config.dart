@@ -14,11 +14,16 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../data/data_sourses/remote/auth_remote_data_source.dart' as _i72;
+import '../../data/data_sources/remote/auth_remote_data_source.dart' as _i865;
+import '../../data/data_sources/remote/event_remote_data_source.dart' as _i42;
 import '../../data/firebase_module.dart' as _i788;
 import '../../data/repo_impl/auth_repo_impl.dart' as _i540;
+import '../../data/repo_impl/event_repo_impl.dart' as _i212;
 import '../../domain/repo/auth_repo.dart' as _i716;
+import '../../domain/repo/event_repo.dart' as _i374;
+import '../../domain/usecases/add_event_usecase.dart' as _i397;
 import '../../domain/usecases/forget_password_usecase.dart' as _i25;
+import '../../domain/usecases/get_event_usecase.dart' as _i1023;
 import '../../domain/usecases/login_usecase.dart' as _i253;
 import '../../domain/usecases/login_with_google_usecase.dart' as _i578;
 import '../../domain/usecases/signup_usecase.dart' as _i866;
@@ -26,6 +31,8 @@ import '../../features/auth/viewmodel/forget_password/forget_password_cubit.dart
     as _i447;
 import '../../features/auth/viewmodel/login/login_cubit.dart' as _i131;
 import '../../features/auth/viewmodel/signup/signup_cubit.dart' as _i776;
+import '../../features/dashboard/tabs/add_event/viewmodel/add_event_cubit.dart'
+    as _i602;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -35,17 +42,32 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
+    gh.factory<_i42.EventRemoteDataSource>(() => _i42.EventRemoteDataSource());
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
-    gh.factory<_i72.AuthRemoteDataSource>(
-      () => _i72.AuthRemoteDataSource(
+    gh.factory<_i374.EventRepo>(
+      () => _i212.EventRepoImpl(
+        eventRemoteDataSource: gh<_i42.EventRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i397.AddEventUseCase>(
+      () => _i397.AddEventUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
+    gh.factory<_i1023.GetEventUseCase>(
+      () => _i1023.GetEventUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
+    gh.factory<_i865.AuthRemoteDataSource>(
+      () => _i865.AuthRemoteDataSource(
         gh<_i59.FirebaseAuth>(),
         gh<_i116.GoogleSignIn>(),
       ),
     );
+    gh.factory<_i602.AddEventCubit>(
+      () => _i602.AddEventCubit(gh<_i397.AddEventUseCase>()),
+    );
     gh.factory<_i716.AuthRepo>(
       () => _i540.AuthRepoImpl(
-        authRemoteDataSource: gh<_i72.AuthRemoteDataSource>(),
+        authRemoteDataSource: gh<_i865.AuthRemoteDataSource>(),
       ),
     );
     gh.factory<_i25.ForgetPasswordUseCase>(

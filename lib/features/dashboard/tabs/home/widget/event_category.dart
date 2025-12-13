@@ -6,7 +6,7 @@ class EventCategory extends StatelessWidget {
   const EventCategory({
     super.key,
     required this.selected,
-    required this.eventName,
+    required this.eventCategory,
     required this.icon,
     required this.colorBorderIsSelected,
     required this.styleTextSelected,
@@ -22,7 +22,7 @@ class EventCategory extends StatelessWidget {
   final Color colorIconNotSelected;
   final TextStyle styleTextSelected;
   final TextStyle styleTextNotSelected;
-  final String eventName;
+  final String eventCategory;
   final IconData icon;
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class EventCategory extends StatelessWidget {
               :colorIconNotSelected
           ),
           Text(
-            eventName,
+            eventCategory,
             style: selected
                 ? styleTextSelected
                 : styleTextNotSelected,

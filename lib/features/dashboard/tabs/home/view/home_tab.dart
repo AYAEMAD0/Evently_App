@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/app_asset.dart';
-import '../../../../core/theme/app_color.dart';
-import '../../../onboarding/viewmodel/theme/theme_provider.dart';
-import 'model/event_category_model.dart';
-import 'widget/event_category.dart';
+import '../../../../../core/constants/app_asset.dart';
+import '../../../../../core/theme/app_color.dart';
+import '../../../../onboarding/viewmodel/theme/theme_provider.dart';
+import '../model/event_category_model.dart';
+import '../widget/event_category.dart';
 
 class HomeTab extends StatelessWidget {
    HomeTab({super.key});
@@ -146,7 +146,7 @@ class HomeTab extends StatelessWidget {
                         ).colorScheme.secondary,
                         //todo index == event.selectedIndex,
                         selected: true,
-                        eventName: eventsCategoryModel[index].eventName.tr(),
+                        eventCategory: eventsCategoryModel[index].eventCategory.tr(),
                         icon: eventsCategoryModel[index].icon,
                       ),
                     ),
