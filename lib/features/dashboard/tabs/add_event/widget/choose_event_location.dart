@@ -44,7 +44,7 @@ class ChooseEventLocation extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-                margin: EdgeInsetsDirectional.only(end: 16.w),
+                margin: EdgeInsetsDirectional.only(end: 16.w,bottom: 8.h),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.r),
                   color: AppColor.primaryColor,
