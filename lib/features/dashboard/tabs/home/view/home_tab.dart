@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently_app/features/dashboard/tabs/home/viewmodel/get_event_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -9,17 +11,40 @@ import '../../../../../core/theme/app_color.dart';
 import '../../../../onboarding/viewmodel/theme/theme_provider.dart';
 import '../model/event_category_model.dart';
 import '../widget/event_category.dart';
+import '../widget/event_item.dart';
 
-class HomeTab extends StatelessWidget {
-   HomeTab({super.key});
+class HomeTab extends StatefulWidget {
+  const HomeTab({super.key});
 
-  final List<EventCategoryModel> eventsCategoryModel = EventCategoryModel.events;
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  final List<EventCategoryModel> eventsCategoryModel =
+      EventCategoryModel.events;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadEvents();
+    });
+  }
+
+  void _loadEvents() {
+    if (eventsCategoryModel.isEmpty) return;
+    final cubit = context.read<GetEventCubit>();
+    final category = eventsCategoryModel[cubit.selectedIndex].eventCategory;
+    cubit.changeIndex(cubit.selectedIndex, category);
+  }
 
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<ThemeProvider>(context);
+    var user = FirebaseAuth.instance.currentUser;
+    final viewmodel = context.watch<GetEventCubit>();
 
-    var user=FirebaseAuth.instance.currentUser;
     if (user == null) {
       return const Center(
         child: CircularProgressIndicator(color: AppColor.primaryColor),
@@ -31,10 +56,7 @@ class HomeTab extends StatelessWidget {
         children: [
           Container(
             height: 240.h,
-            padding: EdgeInsets.symmetric(
-              vertical: 14.h,
-              horizontal: 10.w,
-            ),
+            padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 10.w),
             decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,
               border: Border(
@@ -77,15 +99,18 @@ class HomeTab extends StatelessWidget {
                         theme.isDark()
                             ? AppAsset.sunLightImage
                             : AppAsset.moonImage,
-                        colorFilter: ColorFilter.mode(Theme.of(context).cardColor,BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).cardColor,
+                          BlendMode.srcIn,
+                        ),
                         height: 37.h,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsetsDirectional.only(start:6.w),
+                      margin: EdgeInsetsDirectional.only(start: 6.w),
                       padding: EdgeInsets.symmetric(
-                        horizontal:5.w,
-                        vertical:3.h,
+                        horizontal: 5.w,
+                        vertical: 3.h,
                       ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
@@ -117,17 +142,17 @@ class HomeTab extends StatelessWidget {
                   child: TabBar(
                     isScrollable: true,
                     tabAlignment: TabAlignment.start,
-                    labelPadding: EdgeInsets.symmetric(
-                      horizontal:4.w,
-                    ),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
                     indicatorColor: AppColor.transparentColor,
                     dividerColor: AppColor.transparentColor,
                     onTap: (value) {
                       //todo change tab
+                      final category = eventsCategoryModel[value].eventCategory;
+                      viewmodel.changeIndex(value,category);
                     },
                     tabs: List.generate(
                       eventsCategoryModel.length,
-                          (index) => EventCategory(
+                      (index) => EventCategory(
                         colorBorderIsSelected: Theme.of(
                           context,
                         ).colorScheme.secondary,
@@ -144,9 +169,9 @@ class HomeTab extends StatelessWidget {
                         colorBackgroundIsSelected: Theme.of(
                           context,
                         ).colorScheme.secondary,
-                        //todo index == event.selectedIndex,
-                        selected: true,
-                        eventCategory: eventsCategoryModel[index].eventCategory.tr(),
+                        selected: index == viewmodel.selectedIndex,
+                        eventCategory: eventsCategoryModel[index].eventCategory
+                            .tr(),
                         icon: eventsCategoryModel[index].icon,
                       ),
                     ),
@@ -156,6 +181,63 @@ class HomeTab extends StatelessWidget {
             ),
           ),
 
+          BlocBuilder<GetEventCubit, GetEventState>(
+            builder: (context, state) {
+              if (state is GetEventSuccess) {
+                final events = state.eventEntityList;
+                if (events.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        "no_events_yet".tr(),
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: ListView.separated(
+                      padding: EdgeInsets.only(top: 16.h,bottom: 26.h),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 16.h),
+                      itemCount:
+                          events.length, //todo--------event.filterList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: InkWell(
+                            onTap: () {
+                              //todo nav details
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   Routes.detailsEventRouteName,
+                              //   arguments: event.filterList[index],
+                              // );
+                            },
+                            child: EventItem(model: events[index]!),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              } else if (state is GetEventError) {
+                return Center(
+                  child: Text(
+                    state.messageError,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                );
+              }
+              return Expanded(
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColor.primaryColor,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

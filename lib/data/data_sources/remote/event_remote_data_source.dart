@@ -8,8 +8,7 @@ class EventRemoteDataSource {
     return FirebaseFirestore.instance
         .collection(EventModelDto.collectionName)
         .withConverter<EventModelDto>(
-      fromFirestore: (snap, _) =>
-          EventModelDto.fromFirestore(snap.data()!),
+      fromFirestore: (snap, _) => EventModelDto.fromFirestore(snap.data()!),
       toFirestore: (event, _) => event.toFirestore(),
     );
   }
@@ -20,8 +19,36 @@ class EventRemoteDataSource {
     await doc.set(dto);
   }
 
-  Future<EventModelDto?> getEvent(String id) async {
-    final snapshot = await getCollection().doc(id).get();
-    return snapshot.data();
+  Future<List<EventModelDto>> getEventsByCategory(String category) async {
+    try {
+      final snapshot = await getCollection()
+          .where('category', isEqualTo: category)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        return [];
+      }
+      return snapshot.docs
+          .map((doc) => doc.data())
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get events by category: ${e.toString()}');
+    }
+  }
+
+
+  Future<List<EventModelDto>> getAllEvents() async {
+    try {
+      final snapshot = await getCollection().get();
+
+      if (snapshot.docs.isEmpty) {
+        return [];
+      }
+
+      return snapshot.docs
+          .map((doc) => doc.data())
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get all events: ${e.toString()}');
+    }
   }
 }

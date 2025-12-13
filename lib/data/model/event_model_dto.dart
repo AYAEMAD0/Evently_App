@@ -11,6 +11,7 @@ class EventModelDto {
   String time;
   bool isFavourite;
 
+
   EventModelDto({
     this.id,
     required this.lightImage,
