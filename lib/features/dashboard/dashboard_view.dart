@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:evently_app/features/dashboard/tabs/home/model/event_category_model.dart';
 import 'package:evently_app/features/dashboard/tabs/profile/profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,6 +79,7 @@ class _DashboardViewState extends State<DashboardView> {
           if (!mounted) return;
           if (result == true) {
             context.read<GetEventCubit>().getAllEvents();
+            context.read<GetEventCubit>().changeIndex(0, EventCategoryModel.events[0].eventCategory);
           }
         },
         shape: StadiumBorder(
