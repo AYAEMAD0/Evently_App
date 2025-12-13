@@ -4,6 +4,7 @@ import 'package:evently_app/domain/entities/event_entity.dart';
 extension EventModelDtoMapper on EventModelDto {
   EventEntity toEventEntity() {
     return EventEntity(
+      id: id,
       lightImage: lightImage,
       darkImage: darkImage,
       category: category,
@@ -11,6 +12,7 @@ extension EventModelDtoMapper on EventModelDto {
       description: description,
       date: date,
       time: time,
+      isFavourite: isFavourite,
     );
   }
 }

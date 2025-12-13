@@ -43,5 +43,17 @@ class EventRepoImpl implements EventRepo {
     }
   }
 
+  @override
+  Future<void> deleteEvent({required EventEntity event})async {
+    try{
+      //todo EventEntity-->EventModelDto
+      final dto = event.toEventModelDto();
+      await eventRemoteDataSource.deleteEvent(dto);
+    }catch(e){
+      throw Exception('Failed to delete event: ${e.toString()}');
+
+    }
+  }
+
 
 }

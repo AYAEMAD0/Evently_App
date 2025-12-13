@@ -47,4 +47,15 @@ class EventRemoteDataSource {
       throw Exception('Failed to get all events: ${e.toString()}');
     }
   }
+
+  Future<void> deleteEvent(EventModelDto dto) async {
+    if (dto.id == null || dto.id!.isEmpty) {
+      throw Exception('Event ID is null or empty. Cannot delete the event.');
+    }
+    try {
+      await getCollection().doc(dto.id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete event: ${e.toString()}');
+    }
+  }
 }
