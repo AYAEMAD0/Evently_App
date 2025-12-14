@@ -66,5 +66,25 @@ class EventRepoImpl implements EventRepo {
     }
   }
 
+  @override
+  Future<void> changeFavEvent({required String eventId, required bool isFavourite})async {
+    try {
+      await eventRemoteDataSource.changeFavEvent(eventId, isFavourite);
+    } catch (e) {
+      throw Exception('Failed to change fav event: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<EventEntity>> getAllFavEvents()async {
+    try {
+      final dtoList = await eventRemoteDataSource.getAllFavEvents();
+      //todo EventModelDto--->EventEntity
+      return dtoList.map((e) => e.toEventEntity()).toList();
+    } catch (e) {
+      throw Exception('Failed to get fav event: ${e.toString()}');
+    }
+  }
+
 
 }

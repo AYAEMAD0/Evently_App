@@ -22,10 +22,12 @@ import '../../data/repo_impl/event_repo_impl.dart' as _i212;
 import '../../domain/repo/auth_repo.dart' as _i716;
 import '../../domain/repo/event_repo.dart' as _i374;
 import '../../domain/usecases/add_event_usecase.dart' as _i397;
+import '../../domain/usecases/change_fav_event_usecase.dart' as _i294;
 import '../../domain/usecases/delete_event_usecase.dart' as _i117;
 import '../../domain/usecases/edit_event_usecase.dart' as _i364;
 import '../../domain/usecases/forget_password_usecase.dart' as _i25;
 import '../../domain/usecases/get_all_events_usecase.dart' as _i139;
+import '../../domain/usecases/get_all_fav_events_usecase.dart' as _i195;
 import '../../domain/usecases/get_event_by_category_usecase.dart' as _i85;
 import '../../domain/usecases/login_usecase.dart' as _i253;
 import '../../domain/usecases/login_with_google_usecase.dart' as _i578;
@@ -36,6 +38,8 @@ import '../../features/auth/viewmodel/login/login_cubit.dart' as _i131;
 import '../../features/auth/viewmodel/signup/signup_cubit.dart' as _i776;
 import '../../features/dashboard/tabs/add_event/viewmodel/add_event_cubit.dart'
     as _i602;
+import '../../features/dashboard/tabs/fav/viewmodel/fav_event_cubit.dart'
+    as _i87;
 import '../../features/dashboard/tabs/home/view/details_event/edit_event/viewmodel/edit_event_cubit.dart'
     as _i379;
 import '../../features/dashboard/tabs/home/view/details_event/viewmodel/delete_event_cubit.dart'
@@ -62,6 +66,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i397.AddEventUseCase>(
       () => _i397.AddEventUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
+    gh.factory<_i294.ChangeFavEventUseCase>(
+      () => _i294.ChangeFavEventUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
     gh.factory<_i117.DeleteEventUseCase>(
       () => _i117.DeleteEventUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
@@ -70,6 +77,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i139.GetAllEventsUseCase>(
       () => _i139.GetAllEventsUseCase(eventRepo: gh<_i374.EventRepo>()),
+    );
+    gh.factory<_i195.GetAllFavEventsUseCase>(
+      () => _i195.GetAllFavEventsUseCase(eventRepo: gh<_i374.EventRepo>()),
     );
     gh.factory<_i85.GetEventByCategoryUseCase>(
       () => _i85.GetEventByCategoryUseCase(eventRepo: gh<_i374.EventRepo>()),
@@ -82,6 +92,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i602.AddEventCubit>(
       () => _i602.AddEventCubit(gh<_i397.AddEventUseCase>()),
+    );
+    gh.factory<_i87.FavEventCubit>(
+      () => _i87.FavEventCubit(
+        getAllFavEventsUseCase: gh<_i195.GetAllFavEventsUseCase>(),
+        changeFavEventUseCase: gh<_i294.ChangeFavEventUseCase>(),
+      ),
     );
     gh.factory<_i190.GetEventCubit>(
       () => _i190.GetEventCubit(
