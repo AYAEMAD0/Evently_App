@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/routing/routes.dart';
-import 'tabs/fav/fav_tab.dart';
+import 'tabs/fav/view/fav_tab.dart';
 import 'tabs/home/view/home_tab.dart';
 import 'tabs/home/viewmodel/get_event_cubit.dart';
 import 'tabs/map/map_tab.dart';

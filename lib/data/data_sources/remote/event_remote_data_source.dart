@@ -69,4 +69,31 @@ class EventRemoteDataSource {
       throw Exception('Failed to edit event: ${e.toString()}');
     }
   }
+
+  Future<List<EventModelDto>> getAllFavEvents() async {
+    try {
+      final snapshot = await getCollection()
+          .where("isFavourite", isEqualTo: true).orderBy("date")
+          .get();
+      if (snapshot.docs.isEmpty) {
+        return [];
+      }
+      return snapshot.docs.map((e) => e.data()).toList();
+    } catch (e) {
+      throw Exception('Failed to get all fav events: ${e.toString()}');
+    }
+  }
+  Future<void> changeFavEvent(String eventId, bool isFavourite) async {
+    if (eventId.isEmpty) {
+      throw Exception('Event ID is empty. Cannot change favorite status.');
+    }
+    try {
+      await getCollection().doc(eventId).update({
+        'isFavourite': isFavourite,
+      });
+    } catch (e) {
+      throw Exception('Failed to change favorite status: ${e.toString()}');
+    }
+  }
+
 }

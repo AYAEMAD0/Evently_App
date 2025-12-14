@@ -21,4 +21,28 @@ class EventEntity {
     required this.time,
     this.isFavourite = false,
   });
+
+  EventEntity copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? category,
+    String? lightImage,
+    String? darkImage,
+    String? time,
+    DateTime? date,
+    bool? isFavourite,
+  }) {
+    return EventEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      lightImage: lightImage ?? this.lightImage,
+      darkImage: darkImage ?? this.darkImage,
+      date: date ?? this.date,
+      isFavourite: isFavourite ?? this.isFavourite,
+      category:  category ?? this.category,
+      time:  time ?? this.time,
+    );
+  }
 }
