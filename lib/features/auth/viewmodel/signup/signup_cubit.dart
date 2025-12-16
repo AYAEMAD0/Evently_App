@@ -26,6 +26,7 @@ class SignupCubit extends Cubit<AuthState> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
           name: nameController.text.trim(),
+          avatarId: selectedAvatarId.toString()
         );
         emit(AuthSuccess(user: response));
       } catch (e) {

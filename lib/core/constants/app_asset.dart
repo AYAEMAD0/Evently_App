@@ -8,16 +8,17 @@ static const String onboardingImage2='assets/images/pngs/onboarding2.png';
 static const String onboardingImage3='assets/images/pngs/onboarding3.png';
 static const String onboardingImage4='assets/images/pngs/onboarding4.png';
 
-static const String avatar1='assets/images/avatar/avatar1.png';
-static const String avatar2='assets/images/avatar/avatar2.png';
-static const String avatar3='assets/images/avatar/avatar3.png';
-static const String avatar4='assets/images/avatar/avatar4.png';
-static const String avatar5='assets/images/avatar/avatar5.png';
-static const String avatar6='assets/images/avatar/avatar6.png';
-static const String avatar7='assets/images/avatar/avatar7.png';
-static const String avatar8='assets/images/avatar/avatar8.png';
-static const String avatar9='assets/images/avatar/avatar9.png';
-
+static const List<String> avatars = [
+  'assets/images/avatar/avatar1.png',
+  'assets/images/avatar/avatar2.png',
+  'assets/images/avatar/avatar3.png',
+  'assets/images/avatar/avatar4.png',
+  'assets/images/avatar/avatar5.png',
+  'assets/images/avatar/avatar6.png',
+  'assets/images/avatar/avatar7.png',
+  'assets/images/avatar/avatar8.png',
+  'assets/images/avatar/avatar9.png',
+];
 
 static const String birthdayImage='assets/images/pngs/light/birthday.png';
 static const String bookClubImage='assets/images/pngs/light/bookClub.png';

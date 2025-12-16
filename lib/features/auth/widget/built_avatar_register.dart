@@ -12,17 +12,6 @@ class BuiltAvatarRegister extends StatefulWidget {
 }
 
 class _BuiltAvatarRegisterState extends State<BuiltAvatarRegister> {
-  final List avatarList = const [
-    AppAsset.avatar1,
-    AppAsset.avatar2,
-    AppAsset.avatar3,
-    AppAsset.avatar4,
-    AppAsset.avatar5,
-    AppAsset.avatar6,
-    AppAsset.avatar7,
-    AppAsset.avatar8,
-    AppAsset.avatar9
-  ];
   int currentIndex = 0;
   bool isAutoPlay = true;
   CarouselSliderController? carouselController = CarouselSliderController();
@@ -47,12 +36,12 @@ class _BuiltAvatarRegisterState extends State<BuiltAvatarRegister> {
           }
         },
       ),
-      items: avatarList.map((e) {
+      items: AppAsset.avatars.map((e) {
         return InkWell(
             onTap: (){
               setState(() {
                 isAutoPlay = false;
-                currentIndex = avatarList.indexOf(e);
+                currentIndex =  AppAsset.avatars.indexOf(e);
               });
               carouselController!.animateToPage(currentIndex);
               if (widget.onAvatarChanged != null) {
