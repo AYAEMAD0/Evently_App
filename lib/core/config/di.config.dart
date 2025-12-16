@@ -14,13 +14,16 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../data/data_sources/local/profile_local_data_source.dart' as _i719;
 import '../../data/data_sources/remote/auth_remote_data_source.dart' as _i865;
 import '../../data/data_sources/remote/event_remote_data_source.dart' as _i42;
 import '../../data/firebase_module.dart' as _i788;
 import '../../data/repo_impl/auth_repo_impl.dart' as _i540;
 import '../../data/repo_impl/event_repo_impl.dart' as _i212;
+import '../../data/repo_impl/profile_repo_impl.dart' as _i549;
 import '../../domain/repo/auth_repo.dart' as _i716;
 import '../../domain/repo/event_repo.dart' as _i374;
+import '../../domain/repo/profile_repo.dart' as _i851;
 import '../../domain/usecases/add_event_usecase.dart' as _i397;
 import '../../domain/usecases/change_fav_event_usecase.dart' as _i294;
 import '../../domain/usecases/delete_event_usecase.dart' as _i117;
@@ -29,8 +32,10 @@ import '../../domain/usecases/forget_password_usecase.dart' as _i25;
 import '../../domain/usecases/get_all_events_usecase.dart' as _i139;
 import '../../domain/usecases/get_all_fav_events_usecase.dart' as _i195;
 import '../../domain/usecases/get_event_by_category_usecase.dart' as _i85;
+import '../../domain/usecases/get_user_profile_usecase.dart' as _i629;
 import '../../domain/usecases/login_usecase.dart' as _i253;
 import '../../domain/usecases/login_with_google_usecase.dart' as _i578;
+import '../../domain/usecases/logout_usecase.dart' as _i981;
 import '../../domain/usecases/signup_usecase.dart' as _i866;
 import '../../features/auth/viewmodel/forget_password/forget_password_cubit.dart'
     as _i447;
@@ -46,6 +51,8 @@ import '../../features/dashboard/tabs/home/view/details_event/viewmodel/delete_e
     as _i166;
 import '../../features/dashboard/tabs/home/viewmodel/get_event_cubit.dart'
     as _i190;
+import '../../features/dashboard/tabs/profile/viewmodel/profile_cubit.dart'
+    as _i1052;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -55,9 +62,17 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
+    gh.factory<_i719.ProfileLocalDataSource>(
+      () => _i719.ProfileLocalDataSource(),
+    );
     gh.factory<_i42.EventRemoteDataSource>(() => _i42.EventRemoteDataSource());
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
+    gh.factory<_i851.ProfileRepo>(
+      () => _i549.ProfileRepoImpl(
+        profileLocalDataSource: gh<_i719.ProfileLocalDataSource>(),
+      ),
+    );
     gh.factory<_i374.EventRepo>(
       () => _i212.EventRepoImpl(
         eventRemoteDataSource: gh<_i42.EventRemoteDataSource>(),
@@ -90,6 +105,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i116.GoogleSignIn>(),
       ),
     );
+    gh.factory<_i629.GetUserProfileUseCase>(
+      () => _i629.GetUserProfileUseCase(gh<_i851.ProfileRepo>()),
+    );
     gh.factory<_i602.AddEventCubit>(
       () => _i602.AddEventCubit(gh<_i397.AddEventUseCase>()),
     );
@@ -119,6 +137,9 @@ extension GetItInjectableX on _i174.GetIt {
         deleteEventUseCase: gh<_i117.DeleteEventUseCase>(),
       ),
     );
+    gh.factory<_i981.LogoutUseCase>(
+      () => _i981.LogoutUseCase(gh<_i716.AuthRepo>()),
+    );
     gh.factory<_i25.ForgetPasswordUseCase>(
       () => _i25.ForgetPasswordUseCase(authRepo: gh<_i716.AuthRepo>()),
     );
@@ -130,6 +151,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i866.SignupUseCase>(
       () => _i866.SignupUseCase(authRepo: gh<_i716.AuthRepo>()),
+    );
+    gh.factory<_i1052.ProfileCubit>(
+      () => _i1052.ProfileCubit(
+        gh<_i629.GetUserProfileUseCase>(),
+        gh<_i981.LogoutUseCase>(),
+      ),
     );
     gh.factory<_i447.ForgetPasswordCubit>(
       () => _i447.ForgetPasswordCubit(

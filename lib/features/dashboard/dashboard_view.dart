@@ -1,6 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:evently_app/features/dashboard/tabs/home/model/event_category_model.dart';
-import 'package:evently_app/features/dashboard/tabs/profile/profile_tab.dart';
+import 'package:evently_app/features/dashboard/tabs/profile/view/profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
