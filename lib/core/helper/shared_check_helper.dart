@@ -32,6 +32,7 @@ class SharedCheckHelper {
   static const String keyUserName = 'userName';
   static const String keyUserEmail = 'userEmail';
   static const String keyUserAvatarId = 'userAvatarId';
+  static const String keyIsOnBoarding= 'isOnBoarding';
 
   // User Data
   static Future<void> setUserData({

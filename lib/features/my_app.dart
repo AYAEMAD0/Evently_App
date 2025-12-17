@@ -13,8 +13,15 @@ import 'dashboard/tabs/home/viewmodel/get_event_cubit.dart';
 import 'onboarding/viewmodel/theme/theme_provider.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.appRouter});
+  const MyApp({
+    super.key,
+    required this.appRouter,
+    required this.isOnBoarding,
+    required this.isLogin,
+  });
   final AppRouter appRouter;
+  final bool isOnBoarding;
+  final bool isLogin;
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<ThemeProvider>(context);
@@ -27,11 +34,17 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (_) => getIt<GetEventCubit>()..getAllEvents()),
             BlocProvider(create: (_) => getIt<DeleteEventCubit>()),
-            BlocProvider(create: (_) => getIt<FavEventCubit>()..getAllFavEvents()),
+            BlocProvider(
+              create: (_) => getIt<FavEventCubit>()..getAllFavEvents(),
+            ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            initialRoute: Routes.loginRouteName,
+            initialRoute: isOnBoarding
+                ? Routes.onBoardingRouteName
+                : isLogin
+                ? Routes.loginRouteName
+                : Routes.dashBoardRouteName,
             onGenerateRoute: appRouter.generateRoute,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,

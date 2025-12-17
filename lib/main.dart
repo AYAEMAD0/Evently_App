@@ -21,10 +21,16 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await EasyLocalization.ensureInitialized();
   await SharedCheckHelper.init();
-  final bool themeDark = await SharedCheckHelper.getValue(
-    ThemeProvider.themeKey)??true;
-  final bool languageEnglish = await SharedCheckHelper.getValue(
-    LanguageProvider.languageKey,)??true;
+  final bool themeDark =
+      await SharedCheckHelper.getValue(ThemeProvider.themeKey) ?? true;
+  final bool languageEnglish =
+      await SharedCheckHelper.getValue(LanguageProvider.languageKey) ?? true;
+  final bool onBoarding =
+      await SharedCheckHelper.getValue(SharedCheckHelper.keyIsOnBoarding) ??
+          true;
+  final bool login =
+      await SharedCheckHelper.getValue(SharedCheckHelper.keyIsLogin) ??
+          true;
 
   final Locale startedLocale = languageEnglish
       ? const Locale('en')
@@ -43,7 +49,7 @@ void main() async {
             create: (_) => LanguageProvider(languageEnglish),
           ),
         ],
-        child: MyApp(appRouter: AppRouter()),
+        child: MyApp(appRouter: AppRouter(),isOnBoarding:onBoarding,isLogin:login),
       ),
     ),
   );
