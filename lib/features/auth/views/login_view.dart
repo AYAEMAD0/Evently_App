@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/app_asset.dart';
+import '../../../core/helper/shared_check_helper.dart';
 import '../../../core/routing/routes.dart';
 import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_style.dart';
-
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -42,7 +42,8 @@ class LoginView extends StatelessWidget {
             message: 'login_successfully'.tr(),
             posActionName: 'ok'.tr(),
             posActionClick: () {
-              return Navigator.pushReplacementNamed(
+              SharedCheckHelper.setValue(SharedCheckHelper.keyIsLogin, false);
+              Navigator.pushReplacementNamed(
                 context,
                 Routes.dashBoardRouteName,
               );
