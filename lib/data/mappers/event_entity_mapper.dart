@@ -12,7 +12,10 @@ extension EventEntityMapper on EventEntity {
       description: description,
       date: date,
       time: time,
-      isFavourite: isFavourite
+      isFavourite: isFavourite,
+      detailsLocation: detailsLocation,
+      lngLocation: lngLocation,
+      latLocation: latLocation,
     );
   }
 }

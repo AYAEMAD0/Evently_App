@@ -23,7 +23,6 @@ class BuiltTimeEdit extends StatelessWidget {
         icon: Icons.access_time_rounded,
         colorIcon: Theme.of(context).colorScheme.onTertiary,
         text: "event_time".tr(),
-        textCheckValue: cubit.messageRequiredTime,
         textButton: cubit.selectedTime == null
             ? 'choose_time'.tr()
             : language.isEnglishLanguage()

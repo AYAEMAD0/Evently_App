@@ -19,3 +19,13 @@ class AddEventDateChanged extends AddEventState {}
 class AddEventTimeChanged extends AddEventState {}
 
 class AddEventCategoryChanged extends AddEventState {}
+
+
+class AddEventLocationLoaded extends AddEventState {}
+
+class AddEventLocationChanged extends AddEventState {}
+
+class AddEventRequestMapError extends AddEventState {
+  final String message;
+  AddEventRequestMapError(this.message);
+}

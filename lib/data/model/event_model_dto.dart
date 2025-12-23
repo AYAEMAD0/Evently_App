@@ -10,6 +10,9 @@ class EventModelDto {
   DateTime date;
   String time;
   bool isFavourite;
+  String detailsLocation;
+  double latLocation;
+  double lngLocation;
 
 
   EventModelDto({
@@ -22,6 +25,9 @@ class EventModelDto {
     required this.date,
     required this.time,
     this.isFavourite = false,
+    required this.detailsLocation,
+    required this.latLocation,
+    required this.lngLocation,
   });
 
   EventModelDto.fromFirestore(Map<String, dynamic> json)
@@ -35,6 +41,9 @@ class EventModelDto {
     date: (json["date"] as Timestamp).toDate(),
     time: json["time"] ?? "",
     isFavourite: json["isFavourite"] ?? false,
+    detailsLocation: json["detailsLocation"]??"",
+    latLocation:  json["latLocation"]??0.0,
+    lngLocation:  json["lngLocation"]??0.0,
   );
 
   Map<String, dynamic> toFirestore() {
@@ -48,6 +57,9 @@ class EventModelDto {
       "date": date,
       "time": time,
       "isFavourite": isFavourite,
+      "detailsLocation":detailsLocation,
+      "latLocation":latLocation,
+      "lngLocation":lngLocation
     };
   }
 
