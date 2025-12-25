@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../../../../../../core/helper/shared_check_helper.dart';
 part 'edit_event_state.dart';
 
 @injectable
@@ -136,11 +138,15 @@ class EditEventCubit extends Cubit<EditEventState> {
         latLocation: lat,
         lngLocation: lng,
       );
-
-      await editEventUseCase.call(event: updatedEvent);
+      final uid = SharedCheckHelper.getUserId();
+      if (uid == null || uid.isEmpty) {
+        emit(EditEventError(messageError: "User not logged in"));
+        return;
+      }
+      await editEventUseCase.call(event: updatedEvent,uid:uid);
       emit(EditEventSuccess());
     } catch (e) {
-      emit(EditEventFailure(message: e.toString()));
+      emit(EditEventError(messageError: e.toString()));
     }
   }
 

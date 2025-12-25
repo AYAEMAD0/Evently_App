@@ -13,8 +13,8 @@ class LoginCubit extends Cubit<AuthState> {
   LoginWithGoogleUseCase loginWithGoogleUseCase;
   LoginCubit({required this.loginUseCase,required this.loginWithGoogleUseCase}) : super(AuthInitial());
 
-  TextEditingController emailController = TextEditingController(text: "ayaemed8881@gmail.com");
-  TextEditingController passwordController = TextEditingController(text: "123456");
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool showPassword=false;
