@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../../../../core/theme/app_color.dart';
 import '../../../../../../../../core/theme/app_style.dart';
+import '../../../../../../../../core/widgets/custom_toast.dart';
 import '../viewmodel/edit_event_cubit.dart';
 
 class LocationPickerViewEdit extends StatefulWidget {
@@ -16,15 +17,31 @@ class LocationPickerViewEdit extends StatefulWidget {
 
 class _LocationPickerViewEditState extends State<LocationPickerViewEdit> {
   GoogleMapController? _mapController;
-
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditEventCubit, EditEventState>(
+    return BlocConsumer<EditEventCubit, EditEventState>(
+      listener: (context, state) {
+        // TODO: implement listener
+        if (state is EventLocationChanged) {
+          CustomToast.showToast(
+            message: "location_changed_successfully".tr(),
+            context: context,
+          );
+        }
+      },
       builder: (context, state) {
         final cubit = context.read<EditEventCubit>();
+        final LatLng? position = cubit.eventLocationCurrent;
 
-        if (cubit.eventLocationCurrent == null) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        if (position == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         return Scaffold(
           body: Stack(
@@ -32,8 +49,8 @@ class _LocationPickerViewEditState extends State<LocationPickerViewEdit> {
               GoogleMap(
                 mapType: MapType.terrain,
                 initialCameraPosition: CameraPosition(
-                  target: cubit.eventLocationCurrent!,
-                  zoom: 15,
+                  target: position,
+                  zoom: 14,
                 ),
                 onMapCreated: (controller) {
                   _mapController = controller;
@@ -41,15 +58,17 @@ class _LocationPickerViewEditState extends State<LocationPickerViewEdit> {
                 zoomControlsEnabled: false,
                 onTap: (latLng) async {
                   cubit.changeEventLocation(latLng);
-                  _mapController?.animateCamera(CameraUpdate.newLatLng(latLng));
+                  _mapController?.animateCamera(
+                    CameraUpdate.newLatLng(latLng),
+                  );
                 },
                 markers: {
                   Marker(
-                    markerId: const MarkerId("event_location"),
-                    position: cubit.eventLocationCurrent!,
+                    markerId: const MarkerId("event location"),
+                    position: position,
                     draggable: true,
                     onDragEnd: (latLng) async {
-                      cubit.changeEventLocation(latLng);
+                      await cubit.changeEventLocation(latLng);
                     },
                   ),
                 },
@@ -63,7 +82,7 @@ class _LocationPickerViewEditState extends State<LocationPickerViewEdit> {
                   color: AppColor.primaryColor,
                   alignment: Alignment.center,
                   child: Text(
-                    "Tap to Change Location".tr(),
+                    "tap_to_change_location".tr(),
                     style: AppStyle.bold16White,
                   ),
                 ),

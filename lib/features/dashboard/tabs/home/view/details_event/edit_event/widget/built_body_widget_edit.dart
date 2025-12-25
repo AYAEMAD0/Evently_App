@@ -15,7 +15,11 @@ import 'built_form_edit.dart';
 import 'built_time_edit.dart';
 
 class BuiltBodyWidgetEdit extends StatelessWidget {
-  const BuiltBodyWidgetEdit({super.key,required this.cubit, required this.event});
+  const BuiltBodyWidgetEdit({
+    super.key,
+    required this.cubit,
+    required this.event,
+  });
   final EditEventCubit cubit;
   final EventEntity event;
 
@@ -26,18 +30,21 @@ class BuiltBodyWidgetEdit extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         EventCategoryWithImage(
-          initialCategoryName: cubit.category ??event.category,
+          initialCategoryName: cubit.category ?? event.category,
           onCategorySelected: (light, dark, name) {
             cubit.updateCategory(light, dark, name);
           },
         ),
-        BuiltFormEdit(cubit: cubit,),
-        BuiltDateEdit(cubit: cubit,),
-        BuiltTimeEdit(cubit: cubit,),
+        BuiltFormEdit(cubit: cubit),
+        BuiltDateEdit(cubit: cubit),
+        BuiltTimeEdit(cubit: cubit),
         ChooseEventLocation(
           isAdd: true,
-          onPressed: () async{
+          onPressed: () async {
             // TODO: Implement location editing
+            cubit.ensureLocationInitialized();
+            await Future.delayed(const Duration(milliseconds: 100));
+            if (!context.mounted) return;
             await Navigator.push(
               context,
               MaterialPageRoute(
@@ -59,9 +66,9 @@ class BuiltBodyWidgetEdit extends StatelessWidget {
           },
           backgroundColor: AppColor.primaryColor,
           paddingHeight: 20.h,
-          text: "update_event".tr() ,
+          text: "update_event".tr(),
           styleText: Theme.of(context).textTheme.displayMedium!,
-        )
+        ),
       ],
     );
   }

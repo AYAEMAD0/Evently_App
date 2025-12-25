@@ -14,8 +14,8 @@ class EditEventCubit extends Cubit<EditEventState> {
 
   EditEventCubit({required this.editEventUseCase}) : super(EditEventInitial());
 
-  TextEditingController titleController=TextEditingController();
-  TextEditingController descController=TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTime? selectedDate;
@@ -26,8 +26,6 @@ class EditEventCubit extends Cubit<EditEventState> {
   late EventEntity event;
   LatLng? eventLocationCurrent;
   String? eventAddressLocation;
-
-
 
   @override
   Future<void> close() {
@@ -41,6 +39,7 @@ class EditEventCubit extends Cubit<EditEventState> {
     titleController = TextEditingController(text: event.title);
     descController = TextEditingController(text: event.description);
     selectedDate = event.date;
+
     try {
       DateTime parsedDateTime = DateFormat.jm('en').parse(event.time);
       selectedTime = TimeOfDay.fromDateTime(parsedDateTime);
@@ -56,9 +55,29 @@ class EditEventCubit extends Cubit<EditEventState> {
     imageLightEvent = event.lightImage;
     imageDarkEvent = event.darkImage;
     category = event.category;
-    eventLocationCurrent = LatLng(event.latLocation, event.lngLocation);
-    eventAddressLocation = event.detailsLocation;
+    if (event.latLocation != 0.0 && event.lngLocation != 0.0) {
+      eventLocationCurrent = LatLng(event.latLocation, event.lngLocation);
+      eventAddressLocation = event.detailsLocation;
+    } else {
+      eventLocationCurrent = const LatLng(30.0444, 31.2357);
+      eventAddressLocation = "choose_event_location".tr();
+    }
+
     emit(EditEventDataLoaded());
+  }
+
+  void ensureLocationInitialized() {
+    if (eventLocationCurrent == null) {
+      if (event.latLocation != 0.0 && event.lngLocation != 0.0) {
+        eventLocationCurrent = LatLng(event.latLocation, event.lngLocation);
+        eventAddressLocation = event.detailsLocation;
+      } else {
+        eventLocationCurrent = const LatLng(30.0444, 31.2357);
+        eventAddressLocation = "choose_event_location".tr();
+      }
+
+      emit(EditEventDataLoaded());
+    }
   }
 
   Future<void> chooseDate(BuildContext context) async {
@@ -98,11 +117,12 @@ class EditEventCubit extends Cubit<EditEventState> {
     emit(EditEventCategoryUpdated(categoryName));
   }
 
-
   Future<void> editEvent(BuildContext context) async {
     emit(EditEventLoading());
 
     try {
+      final lat = eventLocationCurrent?.latitude ?? 0.0;
+      final lng = eventLocationCurrent?.longitude ?? 0.0;
       final updatedEvent = EventEntity(
         id: event.id,
         title: titleController.text,
@@ -113,8 +133,8 @@ class EditEventCubit extends Cubit<EditEventState> {
         darkImage: imageDarkEvent!,
         category: category!,
         detailsLocation: eventAddressLocation ?? "",
-        latLocation: eventLocationCurrent?.latitude ?? 0.0,
-        lngLocation: eventLocationCurrent?.longitude ?? 0.0,
+        latLocation: lat,
+        lngLocation: lng,
       );
 
       await editEventUseCase.call(event: updatedEvent);
@@ -123,22 +143,29 @@ class EditEventCubit extends Cubit<EditEventState> {
       emit(EditEventFailure(message: e.toString()));
     }
   }
+
   Future<String> getLocationDetails() async {
     if (eventLocationCurrent != null) {
-      final placemarks = await placemarkFromCoordinates(
-        eventLocationCurrent!.latitude,
-        eventLocationCurrent!.longitude,
-      );
-      eventAddressLocation =
-      "${placemarks[0].locality}, ${placemarks[0].country}";
+      try {
+        final placemarks = await placemarkFromCoordinates(
+          eventLocationCurrent!.latitude,
+          eventLocationCurrent!.longitude,
+        );
+
+        if (placemarks.isNotEmpty) {
+          eventAddressLocation = "${placemarks[0].locality}, ${placemarks[0].country}";
+        }
+      } catch (e) {
+        debugPrint('Error getting location details: $e');
+        eventAddressLocation = "Unknown location";
+      }
     }
     return eventAddressLocation ?? "";
   }
 
-  void changeEventLocation(LatLng latLng) async {
+  Future<void> changeEventLocation(LatLng latLng) async {
     eventLocationCurrent = latLng;
     eventAddressLocation = await getLocationDetails();
-    emit(EditEventLocationChanged());
+    emit(EventLocationChanged(latLng));
   }
-
 }

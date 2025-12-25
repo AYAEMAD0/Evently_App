@@ -23,8 +23,8 @@ class EventEntity {
     required this.time,
     this.isFavourite = false,
     required this.detailsLocation,
-    required this.lngLocation,
     required this.latLocation,
+    required this.lngLocation,
   });
 
   EventEntity copyWith({
@@ -38,9 +38,8 @@ class EventEntity {
     DateTime? date,
     bool? isFavourite,
     String? detailsLocation,
-    double? lngLocation,
     double? latLocation,
-
+    double? lngLocation,
   }) {
     return EventEntity(
       id: id ?? this.id,
@@ -50,11 +49,11 @@ class EventEntity {
       darkImage: darkImage ?? this.darkImage,
       date: date ?? this.date,
       isFavourite: isFavourite ?? this.isFavourite,
-      category:  category ?? this.category,
-      time:  time ?? this.time,
-      detailsLocation: detailsLocation??this.detailsLocation,
-      latLocation: latLocation??this.latLocation,
-      lngLocation: lngLocation??this.lngLocation,
+      category: category ?? this.category,
+      time: time ?? this.time,
+      detailsLocation: detailsLocation ?? this.detailsLocation,
+      latLocation: latLocation ?? this.latLocation,
+      lngLocation: lngLocation ?? this.lngLocation,
     );
   }
 }

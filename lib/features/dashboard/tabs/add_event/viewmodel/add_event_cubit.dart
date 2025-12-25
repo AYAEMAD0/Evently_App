@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -64,18 +65,22 @@ class AddEventCubit extends Cubit<AddEventState> {
 
   Future<void> addEvent() async {
     if (!formKey.currentState!.validate()) return;
-    if (selectedDate == null || selectedTime == null) {
-      emit(AddEventError("Date time required"));
+    if (selectedTime == null) {
+      emit(AddEventError("time_required".tr()));
+      return;
+    }
+    if (selectedDate == null) {
+      emit(AddEventError("date_required".tr()));
       return;
     }
     if (imageLightEvent == null ||
         imageDarkEvent == null ||
         categoryName == null) {
-      emit(AddEventError("Category required"));
+      emit(AddEventError("category_required".tr()));
       return;
     }
     if (eventLocationCurrent == null || eventAddressLocation == null) {
-      emit(AddEventError("Location required"));
+      emit(AddEventError("location_required".tr()));
       return;
     }
 
@@ -125,14 +130,14 @@ class AddEventCubit extends Cubit<AddEventState> {
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     } else {
-      emit(AddEventRequestMapError("please get location permission"));
+      emit(AddEventRequestMapError("please_get_location_permission".tr()));
     }
   }
 
   Future<void> changeEventLocation(LatLng latLang) async {
     eventLocationCurrent = latLang;
     eventAddressLocation = await getLocationDetails();
-    emit(AddEventLocationChanged());
+    emit(EventLocationSelected(latLang));
   }
 
   Future<String> getLocationDetails() async {

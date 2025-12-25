@@ -14,8 +14,8 @@ extension EventEntityMapper on EventEntity {
       time: time,
       isFavourite: isFavourite,
       detailsLocation: detailsLocation,
-      lngLocation: lngLocation,
       latLocation: latLocation,
+      lngLocation: lngLocation,
     );
   }
 }

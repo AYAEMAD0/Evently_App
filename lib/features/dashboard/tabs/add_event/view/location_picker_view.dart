@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:evently_app/core/theme/app_color.dart';
 import 'package:evently_app/core/theme/app_style.dart';
+import 'package:evently_app/core/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +17,7 @@ class LocationPickerView extends StatefulWidget {
 
 class _LocationPickerViewState extends State<LocationPickerView> {
   GoogleMapController? _mapController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,7 +27,16 @@ class _LocationPickerViewState extends State<LocationPickerView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddEventCubit, AddEventState>(
+    return BlocConsumer<AddEventCubit, AddEventState>(
+      listener: (context, state) {
+        // TODO: implement listener
+        if (state is EventLocationSelected) {
+          CustomToast.showToast(
+            message: "location_selected_successfully".tr(),
+            context: context,
+          );
+        }
+      },
       builder: (context, state) {
         var viewmodel = context.read<AddEventCubit>();
         if (viewmodel.userLocationCurrent == null) {
@@ -79,7 +91,7 @@ class _LocationPickerViewState extends State<LocationPickerView> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(color: AppColor.primaryColor),
                     child: Text(
-                      "Tap on Location To Select",
+                      "tap_on_location_to_select".tr(),
                       style: AppStyle.bold16White,
                     ),
                   ),
