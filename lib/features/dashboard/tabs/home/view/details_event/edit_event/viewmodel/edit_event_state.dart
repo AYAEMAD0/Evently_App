@@ -25,3 +25,4 @@ final class EditEventDateChanged extends EditEventState {
   EditEventDateChanged(this.date);
 }
 final class EditEventDataLoaded extends EditEventState {}
+final class EditEventLocationChanged extends EditEventState {}

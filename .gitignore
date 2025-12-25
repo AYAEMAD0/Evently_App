@@ -49,7 +49,7 @@ app.*.map.json
 
 # Android
 android/app/google-services.json
-
+android/local.properties
 # iOS
 ios/Runner/GoogleService-Info.plist
 

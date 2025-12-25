@@ -11,11 +11,11 @@ class BuiltDateEdit extends StatelessWidget {
   final EditEventCubit cubit;
 
   @override
-  Widget build(BuildContext context){
-  var language = Provider.of<LanguageProvider>(context);
-  return  BlocBuilder<EditEventCubit, EditEventState>(
+  Widget build(BuildContext context) {
+    var language = Provider.of<LanguageProvider>(context);
+    return BlocBuilder<EditEventCubit, EditEventState>(
       buildWhen: (previous, current) =>
-      current is EditEventDateChanged ||
+          current is EditEventDateChanged ||
           current is EditEventDataLoaded ||
           current is EditEventValidationFailure,
       builder: (context, state) {
@@ -23,13 +23,12 @@ class BuiltDateEdit extends StatelessWidget {
           icon: Icons.calendar_month_outlined,
           colorIcon: Theme.of(context).colorScheme.onTertiary,
           text: "event_date".tr(),
-          textCheckValue: cubit.messageRequiredDate,
           textButton: cubit.selectedDate == null
               ? 'choose_date'.tr()
               : language.isEnglishLanguage()
               ? '${cubit.selectedDate!.day}/${cubit.selectedDate!.month}/${cubit.selectedDate!.year}'
               : DateFormat.yMd('ar').format(cubit.selectedDate!),
-          onPressed: () => cubit.chooseDate(context),
+          onPressed: () async => await cubit.chooseDate(context),
         );
       },
     );

@@ -11,6 +11,7 @@ import '../viewmodel/add_event_cubit.dart';
 import '../widget/built_form.dart';
 import '../widget/choose_event_location.dart';
 import '../widget/event_category_with_image.dart';
+import 'location_picker_view.dart';
 
 class AddEventTab extends StatelessWidget {
   const AddEventTab({super.key});
@@ -60,17 +61,28 @@ class AddEventTab extends StatelessWidget {
                       BuiltForm(),
                       ChooseEventLocation(
                         isAdd: true,
-                        onPressed: () {
+                        onPressed: () async{
                           // TODO: add location implementation
+                          final cubit = context.read<AddEventCubit>();
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: const LocationPickerView(),
+                              ),
+                            ),
+                          );
+                          cubit.refreshLocation();
                         },
                         value: Text(
-                          "choose_event_location".tr(),
+                          cubit.eventAddressLocation ?? "choose_event_location".tr(),
                           style: AppStyle.bold16Primary,
                         ),
                       ),
 
                       CustomButton(
-                        onPressed: (){
+                        onPressed: () {
                           cubit.addEvent();
                         },
                         backgroundColor: AppColor.primaryColor,

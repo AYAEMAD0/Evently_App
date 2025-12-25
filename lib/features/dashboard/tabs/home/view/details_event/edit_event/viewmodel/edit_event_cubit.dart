@@ -3,6 +3,8 @@ import 'package:evently_app/domain/entities/event_entity.dart';
 import 'package:evently_app/domain/usecases/edit_event_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 part 'edit_event_state.dart';
 
@@ -22,9 +24,10 @@ class EditEventCubit extends Cubit<EditEventState> {
   String? imageDarkEvent;
   String? category;
   late EventEntity event;
+  LatLng? eventLocationCurrent;
+  String? eventAddressLocation;
 
-  String? messageRequiredDate;
-  String? messageRequiredTime;
+
 
   @override
   Future<void> close() {
@@ -53,21 +56,25 @@ class EditEventCubit extends Cubit<EditEventState> {
     imageLightEvent = event.lightImage;
     imageDarkEvent = event.darkImage;
     category = event.category;
-
+    eventLocationCurrent = LatLng(event.latLocation, event.lngLocation);
+    eventAddressLocation = event.detailsLocation;
     emit(EditEventDataLoaded());
   }
 
   Future<void> chooseDate(BuildContext context) async {
+    final initial = (selectedDate != null && selectedDate!.isAfter(DateTime.now()))
+        ? selectedDate!
+        : DateTime.now();
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: initial,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      locale: Localizations.localeOf(context),
     );
 
     if (pickedDate != null && pickedDate != selectedDate) {
       selectedDate = pickedDate;
-      messageRequiredDate = null;
       emit(EditEventDateChanged(selectedDate!));
     }
   }
@@ -80,7 +87,6 @@ class EditEventCubit extends Cubit<EditEventState> {
 
     if (pickedTime != null && pickedTime != selectedTime) {
       selectedTime = pickedTime;
-      messageRequiredTime = null;
       emit(EditEventTimeChanged(selectedTime!));
     }
   }
@@ -92,30 +98,8 @@ class EditEventCubit extends Cubit<EditEventState> {
     emit(EditEventCategoryUpdated(categoryName));
   }
 
-  bool validateForm() {
-    messageRequiredDate = selectedDate == null ? "date_required".tr() : null;
-    messageRequiredTime = selectedTime == null ? "time_required".tr() : null;
-
-    final isFormValid = formKey.currentState?.validate() ?? false;
-    final hasDate = selectedDate != null;
-    final hasTime = selectedTime != null;
-    final hasImages = imageLightEvent != null && imageDarkEvent != null;
-    final hasCategory = category != null;
-
-    if (isFormValid && hasDate && hasTime && hasImages && hasCategory) {
-      emit(EditEventValidationSuccess());
-      return true;
-    } else {
-      emit(EditEventValidationFailure());
-      return false;
-    }
-  }
 
   Future<void> editEvent(BuildContext context) async {
-    if (!validateForm()) {
-      return;
-    }
-
     emit(EditEventLoading());
 
     try {
@@ -128,6 +112,9 @@ class EditEventCubit extends Cubit<EditEventState> {
         lightImage: imageLightEvent!,
         darkImage: imageDarkEvent!,
         category: category!,
+        detailsLocation: eventAddressLocation ?? "",
+        latLocation: eventLocationCurrent?.latitude ?? 0.0,
+        lngLocation: eventLocationCurrent?.longitude ?? 0.0,
       );
 
       await editEventUseCase.call(event: updatedEvent);
@@ -136,4 +123,22 @@ class EditEventCubit extends Cubit<EditEventState> {
       emit(EditEventFailure(message: e.toString()));
     }
   }
+  Future<String> getLocationDetails() async {
+    if (eventLocationCurrent != null) {
+      final placemarks = await placemarkFromCoordinates(
+        eventLocationCurrent!.latitude,
+        eventLocationCurrent!.longitude,
+      );
+      eventAddressLocation =
+      "${placemarks[0].locality}, ${placemarks[0].country}";
+    }
+    return eventAddressLocation ?? "";
+  }
+
+  void changeEventLocation(LatLng latLng) async {
+    eventLocationCurrent = latLng;
+    eventAddressLocation = await getLocationDetails();
+    emit(EditEventLocationChanged());
+  }
+
 }

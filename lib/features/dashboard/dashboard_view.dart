@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:evently_app/features/dashboard/tabs/home/model/event_category_model.dart';
+import 'package:evently_app/features/dashboard/tabs/map/viewmodel/map_cubit.dart';
 import 'package:evently_app/features/dashboard/tabs/profile/view/profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,7 @@ import '../../core/routing/routes.dart';
 import 'tabs/fav/view/fav_tab.dart';
 import 'tabs/home/view/home_tab.dart';
 import 'tabs/home/viewmodel/get_event_cubit.dart';
-import 'tabs/map/map_tab.dart';
+import 'tabs/map/view/map_tab.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -34,7 +35,12 @@ class _DashboardViewState extends State<DashboardView> {
     Icons.person_outline,
   ];
 
-  final List tabList = [HomeTab(), MapTab(), FavTab(), ProfileTab()];
+  final List tabList = [
+    HomeTab(),
+    BlocProvider(create: (context) => MapCubit(), child: MapTab()),
+    FavTab(),
+    ProfileTab(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +76,7 @@ class _DashboardViewState extends State<DashboardView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async{
+        onPressed: () async {
           //todo add event
           final result = await Navigator.pushNamed(
             context,
@@ -79,7 +85,10 @@ class _DashboardViewState extends State<DashboardView> {
           if (!mounted) return;
           if (result == true) {
             context.read<GetEventCubit>().getAllEvents();
-            context.read<GetEventCubit>().changeIndex(0, EventCategoryModel.events[0].eventCategory);
+            context.read<GetEventCubit>().changeIndex(
+              0,
+              EventCategoryModel.events[0].eventCategory,
+            );
           }
         },
         shape: StadiumBorder(

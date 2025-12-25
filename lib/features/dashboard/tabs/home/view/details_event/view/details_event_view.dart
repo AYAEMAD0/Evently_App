@@ -1,5 +1,4 @@
 import 'package:evently_app/domain/entities/event_entity.dart';
-import 'package:evently_app/features/dashboard/tabs/home/view/details_event/widget/built_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +12,7 @@ import '../../../../../../../core/widgets/custom_toast.dart';
 import '../../../model/event_category_model.dart';
 import '../../../viewmodel/get_event_cubit.dart';
 import '../viewmodel/delete_event_cubit.dart';
+import '../widget/built_body_widget.dart';
 
 class DetailsEventView extends StatelessWidget {
   const DetailsEventView({super.key, required this.event});
@@ -88,7 +88,6 @@ class DetailsEventView extends StatelessWidget {
               ),
             ],
           ),
-
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             child: SingleChildScrollView(child: BuiltBodyWidget(event: event)),

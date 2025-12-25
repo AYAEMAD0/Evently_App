@@ -31,7 +31,7 @@ class BuiltBodyWidget extends StatelessWidget {
         //date,time
         ShowDateAndTime(event: event),
         //map
-        ShowMapDetails(),
+        ShowMapDetails(event:event),
         SizedBox(height: 4.h),
         Text(
             "description".tr(), style: AppStyle.bold20PrimaryLight),
