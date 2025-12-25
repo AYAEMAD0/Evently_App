@@ -3,6 +3,7 @@ import 'package:evently_app/domain/usecases/get_all_fav_events_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import '../../../../../core/helper/shared_check_helper.dart';
 import '../../../../../domain/entities/event_entity.dart';
 
 part 'fav_event_state.dart';
@@ -26,7 +27,12 @@ class FavEventCubit extends Cubit<FavEventState> {
   Future<void> getAllFavEvents() async {
     emit(FavEventLoading());
     try {
-      var eventList = await getAllFavEventsUseCase.call();
+      final uid = SharedCheckHelper.getUserId();
+      if (uid == null || uid.isEmpty) {
+        emit(FavEventError(messageError: "User not logged in"));
+        return;
+      }
+      var eventList = await getAllFavEventsUseCase.call(uid: uid);
       filteredEvents = eventList.where((e) => e.isFavourite).toList();
       emit(FavEventSuccess(eventEntityList: eventList));
     } catch (e) {
@@ -51,8 +57,13 @@ class FavEventCubit extends Cubit<FavEventState> {
         filteredEvents.removeWhere((e) => e.id == event.id);
       }
       emit(FavEventSuccess(eventEntityList: updatedEvents));
+      final uid = SharedCheckHelper.getUserId();
+      if (uid == null || uid.isEmpty) {
+        emit(FavEventError(messageError: "User not logged in"));
+        return;
+      }
       changeFavEventUseCase
-          .call(eventId: event.id!, isFavourite: !event.isFavourite)
+          .call(eventId: event.id!, isFavourite: !event.isFavourite,uid: uid)
           .catchError((e) {
             emit(FavEventSuccess(eventEntityList: currentEvents));
             filteredEvents = currentEvents.where((e) => e.isFavourite).toList();

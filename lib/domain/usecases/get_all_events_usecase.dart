@@ -7,7 +7,7 @@ class GetAllEventsUseCase{
   EventRepo eventRepo;
   GetAllEventsUseCase({required this.eventRepo});
 
-  Future<List<EventEntity?>>call(){
-    return eventRepo.getAllEvents();
+  Future<List<EventEntity?>>call({required String uid}){
+    return eventRepo.getAllEvents(uid: uid);
   }
 }

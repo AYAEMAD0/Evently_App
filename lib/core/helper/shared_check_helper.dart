@@ -57,6 +57,9 @@ class SharedCheckHelper {
       'avatarId': getValue(keyUserAvatarId),
     };
   }
+  static String? getUserId() {
+    return _prefs.getString(keyUserId);
+  }
 
   static Future<void> clearUserData() async {
     await _prefs.remove(keyUserId);

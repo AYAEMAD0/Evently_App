@@ -17,6 +17,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../../data/data_sources/local/profile_local_data_source.dart' as _i719;
 import '../../data/data_sources/remote/auth_remote_data_source.dart' as _i865;
 import '../../data/data_sources/remote/event_remote_data_source.dart' as _i42;
+import '../../data/data_sources/remote/user_remote_data_source.dart' as _i928;
 import '../../data/firebase_module.dart' as _i788;
 import '../../data/repo_impl/auth_repo_impl.dart' as _i540;
 import '../../data/repo_impl/event_repo_impl.dart' as _i212;
@@ -66,6 +67,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i719.ProfileLocalDataSource(),
     );
     gh.factory<_i42.EventRemoteDataSource>(() => _i42.EventRemoteDataSource());
+    gh.factory<_i928.UserRemoteDataSource>(() => _i928.UserRemoteDataSource());
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
     gh.factory<_i851.ProfileRepo>(
@@ -123,11 +125,6 @@ extension GetItInjectableX on _i174.GetIt {
         getAllEventsUseCase: gh<_i139.GetAllEventsUseCase>(),
       ),
     );
-    gh.factory<_i716.AuthRepo>(
-      () => _i540.AuthRepoImpl(
-        authRemoteDataSource: gh<_i865.AuthRemoteDataSource>(),
-      ),
-    );
     gh.factory<_i379.EditEventCubit>(
       () =>
           _i379.EditEventCubit(editEventUseCase: gh<_i364.EditEventUseCase>()),
@@ -135,6 +132,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i166.DeleteEventCubit>(
       () => _i166.DeleteEventCubit(
         deleteEventUseCase: gh<_i117.DeleteEventUseCase>(),
+      ),
+    );
+    gh.factory<_i716.AuthRepo>(
+      () => _i540.AuthRepoImpl(
+        authRemoteDataSource: gh<_i865.AuthRemoteDataSource>(),
+        userRemoteDataSource: gh<_i928.UserRemoteDataSource>(),
       ),
     );
     gh.factory<_i981.LogoutUseCase>(

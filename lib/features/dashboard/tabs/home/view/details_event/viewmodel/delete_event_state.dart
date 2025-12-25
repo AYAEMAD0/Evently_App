@@ -6,7 +6,7 @@ class DeleteEventInitial extends DeleteEventState {}
 
 class DeleteEventSuccess extends DeleteEventState {}
 
-class DeleteEventFailure extends DeleteEventState {
-  final String message;
-  DeleteEventFailure({required this.message});
+class DeleteEventError extends DeleteEventState {
+  final String messageError;
+  DeleteEventError({required this.messageError});
 }

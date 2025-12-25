@@ -39,10 +39,10 @@ class _EditEventViewState extends State<EditEventView> {
             Routes.dashBoardRouteName,
             (route) => false,
           );
-        } else if (state is EditEventFailure) {
+        } else if (state is EditEventError) {
           CustomDialog.showMessage(
             context: context,
-            message: state.message,
+            message: state.messageError,
             title: "Error".tr(),
             posActionName: "ok".tr(),
           );

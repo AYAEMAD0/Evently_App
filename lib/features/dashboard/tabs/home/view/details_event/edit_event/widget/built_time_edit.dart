@@ -17,7 +17,7 @@ class BuiltTimeEdit extends StatelessWidget {
     buildWhen: (previous, current) =>
     current is EditEventTimeChanged ||
         current is EditEventDataLoaded ||
-        current is EditEventValidationFailure,
+        current is EditEventValidationError,
     builder: (context, state) {
       return EventDateAndTime(
         icon: Icons.access_time_rounded,

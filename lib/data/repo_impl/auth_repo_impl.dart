@@ -1,3 +1,4 @@
+import 'package:evently_app/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:evently_app/data/mappers/user_model_dto_mapper.dart';
 import 'package:evently_app/domain/entities/user_entity.dart';
 import 'package:evently_app/domain/repo/auth_repo.dart';
@@ -9,7 +10,8 @@ import '../model/user_model_dto.dart';
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource authRemoteDataSource;
-  AuthRepoImpl({required this.authRemoteDataSource});
+  final UserRemoteDataSource userRemoteDataSource;
+  AuthRepoImpl({required this.authRemoteDataSource,required this.userRemoteDataSource});
 
   @override
   Future<void> forgetPassword({required String email}) {
@@ -55,6 +57,9 @@ class AuthRepoImpl implements AuthRepo {
         name: name,
         avatarId: avatarId,
       );
+      final userDto =
+      UserModelDto.fromFirebaseUser(userCredential.user!);
+      await userRemoteDataSource.createUser(userDto);
 
       final user = UserModelDto.fromFirebaseUser(userCredential.user!);
       await SharedCheckHelper.setUserData(

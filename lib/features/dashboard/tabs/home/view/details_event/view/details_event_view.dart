@@ -21,13 +21,13 @@ class DetailsEventView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<DeleteEventCubit, DeleteEventState>(
       listener: (context, state) {
-        if (state is DeleteEventFailure) {
+        if (state is DeleteEventError) {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
           CustomDialog.showMessage(
             context: context,
-            message: state.message,
+            message: state.messageError,
             title: "Error",
             posActionName: "ok".tr(),
           );

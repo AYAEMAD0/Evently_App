@@ -7,7 +7,7 @@ class DeleteEventUseCase{
   EventRepo eventRepo;
   DeleteEventUseCase({required this.eventRepo});
 
-  Future<void>call({required EventEntity event}){
-    return eventRepo.deleteEvent(event: event);
+  Future<void>call({required EventEntity event,required String uid}){
+    return eventRepo.deleteEvent(event: event,uid: uid);
   }
 }
