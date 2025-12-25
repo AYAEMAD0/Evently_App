@@ -17,7 +17,7 @@ class BuiltDateEdit extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is EditEventDateChanged ||
           current is EditEventDataLoaded ||
-          current is EditEventValidationFailure,
+          current is EditEventValidationError,
       builder: (context, state) {
         return EventDateAndTime(
           icon: Icons.calendar_month_outlined,

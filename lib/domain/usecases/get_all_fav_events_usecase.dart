@@ -7,7 +7,7 @@ class GetAllFavEventsUseCase{
   EventRepo eventRepo;
   GetAllFavEventsUseCase({required this.eventRepo});
 
-  Future<List<EventEntity>>call(){
-    return eventRepo.getAllFavEvents();
+  Future<List<EventEntity>>call({required String uid}){
+    return eventRepo.getAllFavEvents(uid: uid);
   }
 }

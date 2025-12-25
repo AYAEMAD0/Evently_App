@@ -7,7 +7,7 @@ class EditEventUseCase{
   EventRepo eventRepo;
   EditEventUseCase({required this.eventRepo});
 
-  Future<void>call({required EventEntity event}){
-    return eventRepo.editEvent(event: event);
+  Future<void>call({required EventEntity event,required String uid}){
+    return eventRepo.editEvent(event: event,uid: uid);
   }
 }
