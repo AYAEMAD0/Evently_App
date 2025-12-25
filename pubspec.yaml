@@ -60,7 +60,6 @@ dependencies:
   geolocator: ^14.0.2
   flutter_dotenv: ^6.0.0
   flutter_screenutil: ^5.9.3
-  firebase_messaging: ^16.1.0
   flutter_local_notifications: ^19.5.0
   geocoding: ^4.0.0
   icons_launcher: 3.0.3
