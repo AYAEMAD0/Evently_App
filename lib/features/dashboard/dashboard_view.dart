@@ -78,14 +78,15 @@ class _DashboardViewState extends State<DashboardView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           //todo add event
+          final getEventCubit = context.read<GetEventCubit>();
           final result = await Navigator.pushNamed(
             context,
             Routes.addEventRouteName,
           );
           if (!mounted) return;
           if (result == true) {
-            context.read<GetEventCubit>().getAllEvents();
-            context.read<GetEventCubit>().changeIndex(
+            getEventCubit.getAllEvents();
+            getEventCubit.changeIndex(
               0,
               EventCategoryModel.events[0].eventCategory,
             );
