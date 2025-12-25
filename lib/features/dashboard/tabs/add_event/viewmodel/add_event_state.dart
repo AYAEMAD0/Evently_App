@@ -10,8 +10,8 @@ class AddEventLoading extends AddEventState {}
 class AddEventSuccess extends AddEventState {}
 
 class AddEventError extends AddEventState {
-  final String message;
-  AddEventError(this.message);
+  final String messageError;
+  AddEventError({required this.messageError});
 }
 
 class AddEventDateChanged extends AddEventState {}

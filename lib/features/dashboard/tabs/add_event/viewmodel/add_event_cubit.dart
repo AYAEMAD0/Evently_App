@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../../../core/helper/shared_check_helper.dart';
 import '../../../../../domain/entities/event_entity.dart';
 import '../../../../../domain/usecases/add_event_usecase.dart';
 part 'add_event_state.dart';
@@ -66,21 +67,21 @@ class AddEventCubit extends Cubit<AddEventState> {
   Future<void> addEvent() async {
     if (!formKey.currentState!.validate()) return;
     if (selectedTime == null) {
-      emit(AddEventError("time_required".tr()));
+      emit(AddEventError(messageError: "time_required".tr()));
       return;
     }
     if (selectedDate == null) {
-      emit(AddEventError("date_required".tr()));
+      emit(AddEventError(messageError: "date_required".tr()));
       return;
     }
     if (imageLightEvent == null ||
         imageDarkEvent == null ||
         categoryName == null) {
-      emit(AddEventError("category_required".tr()));
+      emit(AddEventError(messageError: "category_required".tr()));
       return;
     }
     if (eventLocationCurrent == null || eventAddressLocation == null) {
-      emit(AddEventError("location_required".tr()));
+      emit(AddEventError(messageError: "location_required".tr()));
       return;
     }
 
@@ -99,10 +100,15 @@ class AddEventCubit extends Cubit<AddEventState> {
         latLocation: eventLocationCurrent!.latitude,
         lngLocation: eventLocationCurrent!.longitude
       );
-      await addEventUseCase(event: event);
+      final uid = SharedCheckHelper.getUserId();
+      if (uid == null || uid.isEmpty) {
+        emit(AddEventError(messageError: "User not logged in"));
+        return;
+      }
+      await addEventUseCase(event: event,uid: uid);
       emit(AddEventSuccess());
     } catch (e) {
-      emit(AddEventError(e.toString()));
+      emit(AddEventError(messageError:e.toString()));
     }
   }
 

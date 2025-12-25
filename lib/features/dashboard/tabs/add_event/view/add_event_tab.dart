@@ -30,7 +30,7 @@ class AddEventTab extends StatelessWidget {
           }
 
           if (state is AddEventError) {
-            CustomToast.showToast(message: state.message, context: context);
+            CustomToast.showToast(message: state.messageError, context: context);
           }
         },
         builder: (context, state) {

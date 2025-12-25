@@ -4,11 +4,13 @@ import 'package:injectable/injectable.dart';
 import '../../../main.dart';
 import '../../model/event_model_dto.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../../model/user_model_dto.dart';
 
 @injectable
 class EventRemoteDataSource {
-  CollectionReference<EventModelDto> getCollection() {
+  CollectionReference<EventModelDto> getCollection(String uid) {
     return FirebaseFirestore.instance
+        .collection(UserModelDto.collectionName).doc(uid)
         .collection(EventModelDto.collectionName)
         .withConverter<EventModelDto>(
           fromFirestore: (snap, _) => EventModelDto.fromFirestore(snap.data()!),
@@ -16,16 +18,16 @@ class EventRemoteDataSource {
         );
   }
 
-  Future<void> addEvent(EventModelDto dto) async {
-    final doc = getCollection().doc();
+  Future<void> addEvent(EventModelDto dto,String uid) async {
+    final doc = getCollection(uid).doc();
     dto.id = doc.id;
     await doc.set(dto);
     await scheduleEventNotification(dto);
   }
 
-  Future<List<EventModelDto>> getEventsByCategory(String category) async {
+  Future<List<EventModelDto>> getEventsByCategory(String category,String uid) async {
     try {
-      final snapshot = await getCollection()
+      final snapshot = await getCollection(uid)
           .where('category', isEqualTo: category)
           .orderBy("date")
           .get();
@@ -38,9 +40,9 @@ class EventRemoteDataSource {
     }
   }
 
-  Future<List<EventModelDto>> getAllEvents() async {
+  Future<List<EventModelDto>> getAllEvents(String uid) async {
     try {
-      final snapshot = await getCollection().orderBy("date").get();
+      final snapshot = await getCollection(uid).orderBy("date").get();
 
       if (snapshot.docs.isEmpty) {
         return [];
@@ -52,31 +54,31 @@ class EventRemoteDataSource {
     }
   }
 
-  Future<void> deleteEvent(EventModelDto dto) async {
+  Future<void> deleteEvent(EventModelDto dto,String uid) async {
     if (dto.id == null || dto.id!.isEmpty) {
       throw Exception('Event ID is null or empty. Cannot delete the event.');
     }
     try {
-      await getCollection().doc(dto.id).delete();
+      await getCollection(uid).doc(dto.id).delete();
     } catch (e) {
       throw Exception('Failed to delete event: ${e.toString()}');
     }
   }
 
-  Future<void> editEvent(EventModelDto dto) async {
+  Future<void> editEvent(EventModelDto dto,String uid) async {
     if (dto.id == null || dto.id!.isEmpty) {
       throw Exception('Event ID is null or empty. Cannot edit the event.');
     }
     try {
-      await getCollection().doc(dto.id).update(dto.toFirestore());
+      await getCollection(uid).doc(dto.id).update(dto.toFirestore());
     } catch (e) {
       throw Exception('Failed to edit event: ${e.toString()}');
     }
   }
 
-  Future<List<EventModelDto>> getAllFavEvents() async {
+  Future<List<EventModelDto>> getAllFavEvents(String uid) async {
     try {
-      final snapshot = await getCollection()
+      final snapshot = await getCollection(uid)
           .where("isFavourite", isEqualTo: true)
           .orderBy("date")
           .get();
@@ -89,12 +91,12 @@ class EventRemoteDataSource {
     }
   }
 
-  Future<void> changeFavEvent(String eventId, bool isFavourite) async {
+  Future<void> changeFavEvent(String eventId, bool isFavourite,String uid) async {
     if (eventId.isEmpty) {
       throw Exception('Event ID is empty. Cannot change favorite status.');
     }
     try {
-      await getCollection().doc(eventId).update({'isFavourite': isFavourite});
+      await getCollection(uid).doc(eventId).update({'isFavourite': isFavourite});
     } catch (e) {
       throw Exception('Failed to change favorite status: ${e.toString()}');
     }
