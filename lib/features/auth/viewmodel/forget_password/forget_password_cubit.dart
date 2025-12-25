@@ -11,7 +11,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
   ForgetPasswordUseCase forgetPasswordUseCase;
   ForgetPasswordCubit({required this.forgetPasswordUseCase}) : super(AuthInitial());
 
-  TextEditingController emailController = TextEditingController(text: "ayaemed8881@gmail.com");
+  TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void forgetPassword() async {
