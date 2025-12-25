@@ -46,14 +46,13 @@ class _MapTabState extends State<MapTab> {
               events = eventState.eventEntityList;
             }
 
-            // Circles مع استخدام selectedEventId من Cubit
             Set<Circle> eventCircles = events.map((event) {
               final isSelected = event!.id == mapCubit.selectedEventId;
               return Circle(
                 circleId: CircleId(event.id ?? event.title),
                 center: LatLng(event.latLocation, event.lngLocation),
-                radius: 20,
-                strokeWidth: 10,
+                radius: 200,
+                strokeWidth: 20,
                 strokeColor: isSelected
                     ? AppColor.primaryColor.withAlpha(50)
                     : Colors.black.withAlpha(50),
@@ -69,7 +68,7 @@ class _MapTabState extends State<MapTab> {
                   initialCameraPosition: CameraPosition(
                     target: mapCubit.userLocationCurrent ??
                         const LatLng(31.258787, 30.005530),
-                    zoom: 15,
+                    zoom: 12,
                   ),
                   zoomControlsEnabled: false,
                   myLocationButtonEnabled: true,

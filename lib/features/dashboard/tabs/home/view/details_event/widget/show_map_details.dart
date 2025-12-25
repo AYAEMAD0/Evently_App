@@ -39,7 +39,7 @@ class ShowMapDetails extends StatelessWidget {
               ),
               markers: {
                 Marker(
-                  markerId: const MarkerId("event_location"),
+                  markerId: const MarkerId("event location"),
                   position: eventLatLng,
                 ),
               },

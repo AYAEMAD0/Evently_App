@@ -15,7 +15,7 @@ extension EventModelDtoMapper on EventModelDto {
       isFavourite: isFavourite,
       detailsLocation: detailsLocation,
       latLocation: latLocation,
-      lngLocation: latLocation,
+      lngLocation: lngLocation,
     );
   }
 }

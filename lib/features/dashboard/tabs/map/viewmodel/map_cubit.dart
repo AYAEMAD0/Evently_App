@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,7 +24,7 @@ class MapCubit extends Cubit<MapState> {
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     } else {
-      emit(MapRequestMapError(errorMessage: "please get location permission"));
+      emit(MapRequestMapError(errorMessage: "please_get_location_permission".tr()));
     }
   }
   Future<void> getCurrentLocation() async {

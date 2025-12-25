@@ -26,3 +26,7 @@ final class EditEventDateChanged extends EditEventState {
 }
 final class EditEventDataLoaded extends EditEventState {}
 final class EditEventLocationChanged extends EditEventState {}
+class EventLocationChanged extends EditEventState {
+  final LatLng location;
+  EventLocationChanged(this.location);
+}

@@ -29,3 +29,7 @@ class AddEventRequestMapError extends AddEventState {
   final String message;
   AddEventRequestMapError(this.message);
 }
+class EventLocationSelected extends AddEventState {
+  final LatLng location;
+  EventLocationSelected(this.location);
+}

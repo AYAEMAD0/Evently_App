@@ -98,10 +98,14 @@
   "user_not_found": "لا يوجد مستخدم بهذا البريد الإلكتروني.",
   "invalid_email": "عنوان البريد الإلكتروني غير صالح.",
   "something_went_wrong": "حدث خطأ ما. حاول مرة أخرى.",
-  "no_search_results": "لا توجد فعاليات مفضلة تطابق بحثك"
-
-
-
+  "no_search_results": "لا توجد فعاليات مفضلة تطابق بحثك",
+  "location_selected_successfully":  "تم اختيار الموقع بنجاح",
+  "please_get_location_permission": "من فضلك فعّل إذن الموقع",
+  "tap_to_change_location": "اضغط لتغيير الموقع",
+  "tap_on_location_to_select": "اضغط على الموقع للاختيار",
+  "category_required":  "التصنيف مطلوب",
+  "location_required": "الموقع مطلوب",
+  "location_changed_successfully": "تم تغيير الموقع بنجاح"
 
 
 }
