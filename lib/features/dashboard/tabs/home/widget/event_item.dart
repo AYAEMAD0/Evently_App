@@ -9,6 +9,7 @@ import '../../../../../core/theme/app_style.dart';
 import '../../../../../core/widgets/custom_toast.dart';
 import '../../../../onboarding/viewmodel/theme/theme_provider.dart';
 import '../../fav/viewmodel/fav_event_cubit.dart';
+import '../../home/viewmodel/get_event_cubit.dart';
 
 class EventItem extends StatelessWidget {
   const EventItem({super.key, required this.model});
@@ -16,18 +17,18 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<FavEventCubit, FavEventState, EventEntity>(
-      selector: (state) {
-        if (state is FavEventSuccess) {
-          return state.eventEntityList.firstWhere(
-            (e) => e.id == model.id,
+    return BlocBuilder<GetEventCubit, GetEventState>(
+      builder: (context, getEventState) {
+        EventEntity updatedEvent = model;
+        if (getEventState is GetEventSuccess) {
+          final foundEvent = getEventState.eventEntityList.firstWhere(
+                (e) => e?.id == model.id,
             orElse: () => model,
           );
+          updatedEvent = foundEvent!;
         }
-        return model;
-      },
-      builder: (context, updatedEvent) {
         var isDark = Provider.of<ThemeProvider>(context).isDark();
+
         return Container(
           height: 320.h,
           decoration: BoxDecoration(
@@ -98,6 +99,10 @@ class EventItem extends StatelessWidget {
                             context: context,
                           );
                           context.read<FavEventCubit>().changeFav(updatedEvent);
+                          context.read<GetEventCubit>().updateEventFavorite(
+                            updatedEvent.id!,
+                            !updatedEvent.isFavourite,
+                          );
                         },
                         icon: Icon(
                           updatedEvent.isFavourite

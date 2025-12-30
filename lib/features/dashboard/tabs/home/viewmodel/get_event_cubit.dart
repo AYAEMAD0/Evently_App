@@ -52,4 +52,18 @@ class GetEventCubit extends Cubit<GetEventState> {
       getEventByCategory(eventCategory: category);
     }
   }
+  void updateEventFavorite(String eventId, bool isFavourite) {
+    final currentState = state;
+    if (currentState is! GetEventSuccess) return;
+
+    final updatedEvents = currentState.eventEntityList.map((e) {
+      if (e?.id == eventId) {
+        return e?.copyWith(isFavourite: isFavourite);
+      }
+      return e;
+    }).toList();
+
+    emit(GetEventSuccess(eventEntityList: updatedEvents));
+  }
+
 }
