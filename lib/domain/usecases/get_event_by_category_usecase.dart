@@ -7,7 +7,7 @@ class GetEventByCategoryUseCase{
   EventRepo eventRepo;
   GetEventByCategoryUseCase({required this.eventRepo});
 
-  Future<List<EventEntity?>>call({required String eventCategory}){
-    return eventRepo.getEventsByCategory(eventCategory: eventCategory);
+  Future<List<EventEntity?>>call({required String eventCategory,required String uid}){
+    return eventRepo.getEventsByCategory(eventCategory: eventCategory,uid: uid);
   }
 }

@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:evently_app/core/helper/shared_check_helper.dart';
 import 'package:evently_app/core/routing/app_router.dart';
 import 'package:evently_app/features/my_app.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp(appRouter:AppRouter()));
+    final bool onBoarding =
+        await SharedCheckHelper.getValue(SharedCheckHelper.keyIsOnBoarding) ??
+        true;
+    final bool login =
+        await SharedCheckHelper.getValue(SharedCheckHelper.keyIsLogin) ?? true;
+    await tester.pumpWidget(
+      MyApp(appRouter: AppRouter(), isOnBoarding: onBoarding, isLogin: login),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

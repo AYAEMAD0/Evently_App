@@ -9,15 +9,30 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this.firebaseAuth, this.googleSignIn);
 
-  Future<UserCredential> login({required String email, required String password}) {
-    return firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  Future<UserCredential> login({
+    required String email,
+    required String password,
+  }) {
+    return firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
-  Future<UserCredential> signup({required String email, required String password,}) async{
+  Future<UserCredential> signup({
+    required String email,
+    required String password,
+    required String name,
+    String? avatarId,
+  }) async {
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    await userCredential.user!.updateDisplayName(name);
+    if (avatarId != null) {
+      await userCredential.user!.updatePhotoURL(avatarId);
+    }
     await userCredential.user!.sendEmailVerification();
     return userCredential;
   }
@@ -30,11 +45,17 @@ class AuthRemoteDataSource {
     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
     if (googleUser == null) throw Exception('Google Sign In aborted');
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
     return await firebaseAuth.signInWithCredential(credential);
+  }
+
+  Future<void> logout() async {
+    await googleSignIn.signOut();
+    await firebaseAuth.signOut();
   }
 }

@@ -49,9 +49,11 @@ app.*.map.json
 
 # Android
 android/app/google-services.json
-
+android/local.properties
 # iOS
 ios/Runner/GoogleService-Info.plist
 
 # Firebase Hosting (اختياري)
 firebase.json
+lib/firebase_options.dart
+android\app\google-services.json

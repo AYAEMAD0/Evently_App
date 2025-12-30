@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently_app/core/helper/shared_check_helper.dart';
 import 'package:evently_app/features/onboarding/widget/built_circle_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,6 +66,7 @@ class OnboardingOtherView extends StatelessWidget {
           ),
           onDone: () async{
             //todo auth
+            SharedCheckHelper.setValue(SharedCheckHelper.keyIsOnBoarding, false);
             Navigator.pushReplacementNamed(context, Routes.loginRouteName);
           },
           showDoneButton: true,

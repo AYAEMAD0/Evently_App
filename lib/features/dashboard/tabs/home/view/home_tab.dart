@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../core/routing/routes.dart';
 import '../model/event_category_model.dart';
 import '../widget/event_item.dart';
 
@@ -69,7 +70,13 @@ class _HomeTabState extends State<HomeTab> {
                           child: InkWell(
                             onTap: () {
                               //todo nav details
+                              Navigator.pushNamed(
+                                context,
+                                Routes.detailsEventRouteName,
+                                arguments: events[index],
+                              );
                             },
+
                             child: EventItem(model: events[index]!),
                           ),
                         );

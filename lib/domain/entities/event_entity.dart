@@ -8,7 +8,9 @@ class EventEntity {
   final DateTime date;
   final String time;
   final bool isFavourite;
-  //TODO LOCATION
+  final String detailsLocation;
+  final double latLocation;
+  final double lngLocation;
 
   EventEntity({
     this.id,
@@ -20,5 +22,38 @@ class EventEntity {
     required this.date,
     required this.time,
     this.isFavourite = false,
+    required this.detailsLocation,
+    required this.latLocation,
+    required this.lngLocation,
   });
+
+  EventEntity copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? category,
+    String? lightImage,
+    String? darkImage,
+    String? time,
+    DateTime? date,
+    bool? isFavourite,
+    String? detailsLocation,
+    double? latLocation,
+    double? lngLocation,
+  }) {
+    return EventEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      lightImage: lightImage ?? this.lightImage,
+      darkImage: darkImage ?? this.darkImage,
+      date: date ?? this.date,
+      isFavourite: isFavourite ?? this.isFavourite,
+      category: category ?? this.category,
+      time: time ?? this.time,
+      detailsLocation: detailsLocation ?? this.detailsLocation,
+      latLocation: latLocation ?? this.latLocation,
+      lngLocation: lngLocation ?? this.lngLocation,
+    );
+  }
 }

@@ -11,11 +11,11 @@ class EventRepoImpl implements EventRepo {
   EventRepoImpl({required this.eventRemoteDataSource});
 
   @override
-  Future<void> addEvent({required EventEntity event}) async {
+  Future<void> addEvent({required EventEntity event,required String uid}) async {
     try{
       //todo EventEntity-->EventModelDto
       final dto = event.toEventModelDto();
-      await eventRemoteDataSource.addEvent(dto);
+      await eventRemoteDataSource.addEvent(dto,uid);
     }catch(e){
       throw Exception('Failed to add event: ${e.toString()}');
 
@@ -23,9 +23,9 @@ class EventRepoImpl implements EventRepo {
   }
 
   @override
-  Future<List<EventEntity>> getAllEvents()async{
+  Future<List<EventEntity>> getAllEvents({required String uid})async{
     try {
-      final dtoList = await eventRemoteDataSource.getAllEvents();
+      final dtoList = await eventRemoteDataSource.getAllEvents(uid);
       return dtoList.map((e) => e.toEventEntity(),).toList();
     } catch (e) {
       throw Exception('Failed to get all events: ${e.toString()}');
@@ -33,13 +33,56 @@ class EventRepoImpl implements EventRepo {
   }
 
   @override
-  Future<List<EventEntity>> getEventsByCategory({required String eventCategory})async {
+  Future<List<EventEntity>> getEventsByCategory({required String eventCategory,required String uid})async {
     try {
-      final dtoList = await eventRemoteDataSource.getEventsByCategory(eventCategory);
+      final dtoList = await eventRemoteDataSource.getEventsByCategory(eventCategory,uid);
       //todo EventModelDto--->EventEntity
       return dtoList.map((e) => e.toEventEntity()).toList();
     } catch (e) {
       throw Exception('Failed to get events by category $eventCategory: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> deleteEvent({required EventEntity event,required String uid})async {
+    try{
+      //todo EventEntity-->EventModelDto
+      final dto = event.toEventModelDto();
+      await eventRemoteDataSource.deleteEvent(dto,uid);
+    }catch(e){
+      throw Exception('Failed to delete event: ${e.toString()}');
+
+    }
+  }
+
+  @override
+  Future<void> editEvent({required EventEntity event,required String uid}) async{
+    try{
+      //todo EventEntity-->EventModelDto
+      final dto = event.toEventModelDto();
+      await eventRemoteDataSource.editEvent(dto,uid);
+    }catch(e){
+      throw Exception('Failed to edit event: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> changeFavEvent({required String eventId, required bool isFavourite,required String uid})async {
+    try {
+      await eventRemoteDataSource.changeFavEvent(eventId, isFavourite,uid);
+    } catch (e) {
+      throw Exception('Failed to change fav event: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<EventEntity>> getAllFavEvents({required String uid})async {
+    try {
+      final dtoList = await eventRemoteDataSource.getAllFavEvents(uid);
+      //todo EventModelDto--->EventEntity
+      return dtoList.map((e) => e.toEventEntity()).toList();
+    } catch (e) {
+      throw Exception('Failed to get fav event: ${e.toString()}');
     }
   }
 

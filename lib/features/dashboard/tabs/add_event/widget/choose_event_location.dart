@@ -44,7 +44,7 @@ class ChooseEventLocation extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-                margin: EdgeInsetsDirectional.only(end: 16.w),
+                margin: EdgeInsetsDirectional.only(end: 16.w,),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.r),
                   color: AppColor.primaryColor,
@@ -55,7 +55,7 @@ class ChooseEventLocation extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
-              value,
+              Expanded(child: value),
               Spacer(),
               Icon(
                 Icons.arrow_forward_ios_rounded,

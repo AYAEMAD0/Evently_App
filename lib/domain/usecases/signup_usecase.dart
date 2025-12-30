@@ -7,7 +7,7 @@ class SignupUseCase{
   AuthRepo authRepo;
   SignupUseCase({required this.authRepo});
 
-  Future<UserEntity>call({required String email,required String password,required String name}){
-    return authRepo.signup(email: email,password:  password,name: name);
+  Future<UserEntity>call({required String email,required String password,required String name,String? avatarId}){
+    return authRepo.signup(email: email,password:  password,name: name,avatarId: avatarId);
   }
 }

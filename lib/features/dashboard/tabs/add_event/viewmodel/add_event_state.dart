@@ -10,8 +10,8 @@ class AddEventLoading extends AddEventState {}
 class AddEventSuccess extends AddEventState {}
 
 class AddEventError extends AddEventState {
-  final String message;
-  AddEventError(this.message);
+  final String messageError;
+  AddEventError({required this.messageError});
 }
 
 class AddEventDateChanged extends AddEventState {}
@@ -19,3 +19,17 @@ class AddEventDateChanged extends AddEventState {}
 class AddEventTimeChanged extends AddEventState {}
 
 class AddEventCategoryChanged extends AddEventState {}
+
+
+class AddEventLocationLoaded extends AddEventState {}
+
+class AddEventLocationChanged extends AddEventState {}
+
+class AddEventRequestMapError extends AddEventState {
+  final String message;
+  AddEventRequestMapError(this.message);
+}
+class EventLocationSelected extends AddEventState {
+  final LatLng location;
+  EventLocationSelected(this.location);
+}

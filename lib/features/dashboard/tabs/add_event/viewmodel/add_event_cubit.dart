@@ -1,6 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../../../../core/helper/shared_check_helper.dart';
 import '../../../../../domain/entities/event_entity.dart';
 import '../../../../../domain/usecases/add_event_usecase.dart';
 part 'add_event_state.dart';
@@ -60,12 +66,22 @@ class AddEventCubit extends Cubit<AddEventState> {
 
   Future<void> addEvent() async {
     if (!formKey.currentState!.validate()) return;
-    if (selectedDate == null || selectedTime == null) {
-      emit(AddEventError("date_time_required"));
+    if (selectedTime == null) {
+      emit(AddEventError(messageError: "time_required".tr()));
       return;
     }
-    if (imageLightEvent == null || imageDarkEvent == null || categoryName == null) {
-      emit(AddEventError("category_required"));
+    if (selectedDate == null) {
+      emit(AddEventError(messageError: "date_required".tr()));
+      return;
+    }
+    if (imageLightEvent == null ||
+        imageDarkEvent == null ||
+        categoryName == null) {
+      emit(AddEventError(messageError: "category_required".tr()));
+      return;
+    }
+    if (eventLocationCurrent == null || eventAddressLocation == null) {
+      emit(AddEventError(messageError: "location_required".tr()));
       return;
     }
 
@@ -80,12 +96,19 @@ class AddEventCubit extends Cubit<AddEventState> {
         description: descController.text.trim(),
         date: selectedDate!,
         time: _formatTime(selectedTime!),
+        detailsLocation: eventAddressLocation!,
+        latLocation: eventLocationCurrent!.latitude,
+        lngLocation: eventLocationCurrent!.longitude
       );
-
-      await addEventUseCase(event: event);
+      final uid = SharedCheckHelper.getUserId();
+      if (uid == null || uid.isEmpty) {
+        emit(AddEventError(messageError: "User not logged in"));
+        return;
+      }
+      await addEventUseCase(event: event,uid: uid);
       emit(AddEventSuccess());
     } catch (e) {
-      emit(AddEventError(e.toString()));
+      emit(AddEventError(messageError:e.toString()));
     }
   }
 
@@ -95,4 +118,50 @@ class AddEventCubit extends Cubit<AddEventState> {
     descController.dispose();
     return super.close();
   }
+
+  LatLng? userLocationCurrent;
+  LatLng? eventLocationCurrent;
+  String? eventAddressLocation;
+
+  Future<void> getCurrentLocation() async {
+    var position = await Geolocator.getCurrentPosition();
+    userLocationCurrent = LatLng(position.latitude, position.longitude);
+    emit(AddEventLocationLoaded());
+  }
+
+  void getRequestPermission() async {
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      getCurrentLocation();
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    } else {
+      emit(AddEventRequestMapError("please_get_location_permission".tr()));
+    }
+  }
+
+  Future<void> changeEventLocation(LatLng latLang) async {
+    eventLocationCurrent = latLang;
+    eventAddressLocation = await getLocationDetails();
+    emit(EventLocationSelected(latLang));
+  }
+
+  Future<String> getLocationDetails() async {
+    if (eventLocationCurrent != null) {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        eventLocationCurrent!.latitude,
+        eventLocationCurrent!.longitude,
+      );
+      eventAddressLocation =
+      "${placemarks[0].locality ?? ''}, ${placemarks[0].country ?? ''}";
+    } else {
+      eventAddressLocation = "Unknown location";
+    }
+    return eventAddressLocation??"";
+  }
+
+  void refreshLocation() {
+    emit(AddEventLocationChanged());
+  }
+
 }

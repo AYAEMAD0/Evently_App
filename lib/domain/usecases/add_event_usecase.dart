@@ -7,7 +7,7 @@ class AddEventUseCase{
   EventRepo eventRepo;
   AddEventUseCase({required this.eventRepo});
 
-  Future<void>call({required EventEntity event}){
-    return eventRepo.addEvent(event: event);
+  Future<void>call({required EventEntity event,required String uid}){
+    return eventRepo.addEvent(event: event,uid:uid);
   }
 }
